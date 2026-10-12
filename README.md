@@ -1,31 +1,32 @@
 # Everyone's a 4.8
 
-An interactive drop about trust signals in hiring. AI now writes the resumes and AI reads them, so hiring leans harder on who will vouch for you. The rating systems people have built for that job tend to drift toward the top of their scales, where they tell fewer and fewer people apart. The drop measures that drift, explains the forces behind it, and lets you run a simulated company of 80 coworkers to see which rules keep a vouch worth something.
+An interactive essay on how we rate people. When I booked an Airbnb for my dad's 70th, every place was rated 4.8 or higher, and the stars couldn't tell me which one was good. We rate food and hotels honestly and go easy on people, and now that AI writes the resumes and reads them too, hiring leans on the ratings we're worst at giving. The page measures that gap and runs a simulated company of 80 coworkers to see which rules still find the best people.
 
-By [Brian Grover](https://www.linkedin.com/in/briantgrover) ([@briantgrover](https://x.com/briantgrover)), October 2026. We judge restaurants and hotels honestly and go easy on people. This drop shows what that does to ratings, and what it means for hiring now that AI writes and reads the resumes.
+By [Brian Grover](https://www.linkedin.com/in/briantgrover) ([@briantgrover](https://x.com/briantgrover)), October 2026.
 
 ## What's on the page
 
-Six full-screen scenes under a fixed frame: the title and the page's own rating at the top, a counter with dots at the bottom. One scroll, swipe or arrow key moves one scene, and each scene's line hands off to the next.
+Six full-screen scenes under a fixed frame: the title and the page's own rating at the top, a counter with dots at the bottom. One scroll, swipe or arrow key moves one scene.
 
-1. **Everyone's a 4.8.** We'll tell a restaurant its fries were soggy, but rate a person and almost everyone gets a 4.8. Now that AI writes and reads the resumes, hiring leans on the ratings we're worst at giving.
-2. **Booking an Airbnb? Guess the typical rating.** Drag the star to guess the typical rating in San Francisco and New York. The answer, from our own measurement of this year's listings, is 4.84.
-3. **We go easy on people.** Grids of 100 stars for Harvard grades, eBay sellers, LinkedIn endorsements, GitHub stars, and Airbnb against TripAdvisor hotels. When a person is on the other end, the scores crowd the top; hotels, rated as businesses, spread out, about 1 in 5 star ratings on Yelp in 2023 was a single star, and a third of food products with 10+ reviews on big US store sites averaged under 4 stars in 2025.
-4. **The comparison.** The same 80 simulated coworkers rated two ways at once, on two charts that share one axis: one-click likes above, real work and vetted vouches below. Likes find about half of the 10 most skilled; real work and vetted vouches find 9 in the page's run.
-5. **Which rules find the best people?** In our simulation, one bar for each set of rules, best first, each averaged over 12 simulated companies. A tap on a bar reruns the lower chart under those rules, and a line under the bars says the numbers are simulated, not measured.
-6. **What this means for hiring.** We're good at judging things and bad at judging each other: on one freelance site, 28% of employers who privately said they'd never rehire a worker still gave that worker 4 stars or more in public. So lean on signals that are hard to fake: real work, references about specific work, and more weight on people whose past calls held up.
+1. **Everyone's a 4.8.** The Airbnb search for my dad's 70th, and the idea: we rate things honestly and people generously, and hiring now runs on the second kind.
+2. **Booking an Airbnb? Guess the typical rating.** Drag the star to guess. The answer, from our count of this year's listings in San Francisco and New York, is 4.84. Packaged food then appears on the same scale as a gold line: only 7 in 100 food products average 4.8 or more. Airbnb's own explanation of why its ratings skew high follows.
+3. **We go easy on people.** Grids of 100 stars in two rows. Rating people: Harvard grades that are A's, eBay feedback that's positive, Airbnb listings at 4.5+. Rating things: TripAdvisor hotels, packaged food and beauty products at 4.5+. Each number counts up as its stars fill.
+4. **Likes miss half the best people.** The same 80 simulated coworkers rated two ways, on two charts that share one axis: one-click likes above, real work and trusted references below. Likes catch 5 of the 10 best in the page's run; real work and trusted references catch 9.
+5. **Which rules find the best people?** One bar for each set of rules, best first in gold, each averaged over 12 simulated companies, with each rule's gain over one-click likes. A tap on a bar reruns the lower chart under those rules.
+6. **What this means for hiring.** What the simulation and the research say, what to do about it (ask for real work, ask references about specific work, trust people whose past calls held up), and a question for the reader.
 
 Scenes 2, 4 and 6 each have a "Why?" that opens a few sentences of evidence, with sources, in a frosted card over the scene's text. The page's rating climbs from 3.0 to 5.0 as you go, and the last scene says so. `methods.html` holds the rest behind a short summary, in four parts that open on request: the data, the lab's rules, the research, and the sources.
 
 ## Data and sources
 
 - `research/airbnb_measure.py` downloads Inside Airbnb's detailed listings for San Francisco and New York City (snapshot of 14 June 2026) and writes the rating distribution to `data/airbnb.json`. Inside Airbnb data is licensed [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/); credit to [Inside Airbnb](https://insideairbnb.com/).
+- Packaged food and beauty: our count of public customer reviews posted in 2025 on Amazon, Walmart, Target and Kroger product pages, from a commercial collection of retailer reviews. The raw reviews can't be republished; the counts the page draws are in `data/food.json`, and `methods.html#m-food` says how they were made.
 - `research/sources.md` lists every number the page uses, the primary source it came from, and the ones that were cut.
 - `data/figures.json` holds the numbers drawn in the charts, each traceable to the ledger. Its `rules` block is scene 5's bars; `node tools/lab-check.mjs` fails if any of them drifts from the model.
 
 ## How it was built
 
-Built with [Claude Code](https://claude.com/claude-code). Research agents traced every number to its primary source, other agents built the lab and the charts, six specialist agents reviewed the design, motion, scrolling, accessibility, layout and loading, and a fresh reviewer checked the finished page against the sources. The full conversation is in `TRANSCRIPT.md`.
+Built with [Claude Code](https://claude.com/claude-code). Research agents traced every number to its primary source, other agents built the lab and the charts, six specialist agents reviewed the design, motion, scrolling, accessibility, layout and loading, and a fresh reviewer checked the finished page against the sources.
 
 The page is static HTML, CSS and JavaScript with no framework, no build step, no cookies and no tracking.
 

@@ -1,6 +1,7 @@
 // The charts in "Everyone's a 4.8":
-//   #guess-root     scene 2: guess the typical Airbnb rating, then see every listing
-//   #drift-root     scene 3: 100 stars per rating system, gold for the share at the top
+//   #guess-root     scene 2: guess the typical Airbnb rating, then see every listing, with
+//                   packaged food on the same scale
+//   #drift-root     scene 3: 100 stars per rating system, people in one row and things in the next
 //   #why-now-root   methods page: what employers would pay before ChatGPT and in 2024
 //   #validity-root  methods page: how well hiring methods predict the job, 1998 and 2022
 //
@@ -37,6 +38,7 @@ function loadJSON(name, path) {
 const has = (id) => Boolean(document.getElementById(id));
 const figuresReady = ['guess-root', 'drift-root', 'why-now-root', 'validity-root'].some(has) ? loadJSON('figures', '../data/figures.json') : null;
 const airbnbReady = has('guess-root') ? loadJSON('airbnb', '../data/airbnb.json') : null;
+const foodReady = has('guess-root') ? loadJSON('food', '../data/food.json') : null;
 
 /* Small helpers */
 
@@ -248,6 +250,20 @@ function checkGuessFigures(m, g) {
   }
 }
 
+// Packaged food, as each 0.05-wide band's share of all the food products, on the same bands as
+// the Airbnb bars. Without it the reveal shows Airbnb alone.
+function foodModel(food) {
+  const bins = food && food.bins_1_00_to_5_00_step_0_05;
+  if (!Array.isArray(bins) || bins.length !== 80) return null;
+  const n = bins.reduce((a, b) => a + b, 0);
+  if (n !== food.n) console.warn(`Food check: the bins hold ${n} products, food.json says ${food.n}.`);
+  const above = (from) => (bins.slice(from).reduce((a, b) => a + b, 0) / n) * 100;
+  if (oneDecimal(above(76)) !== Number(food.shareAtLeast48).toFixed(1)) {
+    console.warn(`Food check: 4.8 or higher computes to ${oneDecimal(above(76))}, food.json says ${food.shareAtLeast48}.`);
+  }
+  return { n, shares: bins.map((k) => k / n), ge48: food.shareAtLeast48 };
+}
+
 // The thumb is 36px wide, so a value sits half a thumb in from each end of the track.
 const THUMB_HALF = 18;
 
@@ -256,12 +272,21 @@ async function buildGuess(root) {
   const g = figures.guess;
   const m = histogramModel(air, g);
   checkGuessFigures(m, g);
+  const food = await foodReady.then(foodModel, () => null);
+  const figure = root.closest('figure');
+  const quote = document.getElementById('guess-quote');
 
   const body = document.getElementById('guess-body');
   const intro = body ? body.textContent.trim() : '';
   const start = Number(g.defaultGuess ?? 3);
   const medianText = Number(g.median).toFixed(2);
-  const answer = `By our own count of this year’s listings, half are rated ${medianText} or higher. When nearly everyone is near a 5, the rating stops telling you much.`;
+  // The shortest phones get the same answer in fewer words, so it clears the big number.
+  const shortScreen = window.matchMedia('(max-width: 959.98px) and (max-height: 599.98px)');
+  const longAnswer = food
+    ? `Half these places are rated ${medianText} or higher. The gold line is packaged food on the same scale: only ${Math.round(food.ge48)} in 100 products average 4.8 or more.`
+    : `By our own count of this year’s listings, half are rated ${medianText} or higher. When nearly everyone is near a 5, the rating stops telling you much.`;
+  const shortAnswer = food ? `Half are rated ${medianText}+. Gold: packaged food, only ${Math.round(food.ge48)} in 100 at 4.8+.` : longAnswer;
+  const answer = () => (shortScreen.matches ? shortAnswer : longAnswer);
   const ticks = [1, 2, 3, 4, 5].map((v) => `<span style="left:${(v - 1) * 25}%">${v}</span>`).join('');
 
   root.insertAdjacentHTML(
@@ -326,16 +351,22 @@ async function buildGuess(root) {
 
   const label =
     `Histogram of ${m.n.toLocaleString('en-US')} listings on the full scale from 1 to 5: ` +
-    `${oneDecimal(m.ge45)}% at 4.5 or above, and half are rated ${medianText} or higher.`;
+    `${oneDecimal(m.ge45)}% at 4.5 or above, and half are rated ${medianText} or higher.` +
+    (food ? ` A gold line shows packaged food on the same scale: ${oneDecimal(food.ge48)}% of products average 4.8 or higher.` : '');
 
   let size = { width: 0, height: 0 };
+  let revealedAt = -Infinity;
   const renderHist = (pending) => {
     if (!state.revealed || !size.width) return;
-    hist.innerHTML = histogramSVG(m, size.width, size.height, pending, label);
+    hist.innerHTML = histogramSVG(m, food, size.width, size.height, pending, label);
   };
+  // A resize while the bars are still rising (the text beside them can reflow on the reveal)
+  // draws the chart again and restarts the rise, rather than cutting it short.
   watchSize(plot, (width, height) => {
     size = { width, height };
-    renderHist(false);
+    const rising = motionAllowed() && performance.now() - revealedAt < 1800;
+    renderHist(rising);
+    if (rising) play(hist.firstElementChild);
   });
 
   const reveal = () => {
@@ -343,6 +374,9 @@ async function buildGuess(root) {
     state.guess = Number(range.value);
     range.disabled = true;
     root.classList.add('is-revealed');
+    if (figure) figure.classList.add('is-revealed');
+    if (quote) quote.hidden = false;
+    revealedAt = performance.now();
     renderHist(true);
     play(hist.firstElementChild);
     if (state.stop) state.stop();
@@ -352,10 +386,12 @@ async function buildGuess(root) {
     else showNumber(to);
     setLine(numberLabel, 'The typical rating');
     setLine(hint, `Your guess ${state.guess.toFixed(2)} · typical ${medianText}`);
-    setLine(body, answer);
+    setLine(body, answer());
     button.textContent = 'Guess again';
     button.classList.add('btn-quiet');
-    message.textContent = `You guessed ${state.guess.toFixed(2)}. The typical place is rated ${medianText}. ${belowSentence(state.guess)}`;
+    message.textContent =
+      `You guessed ${state.guess.toFixed(2)}. The typical place is rated ${medianText}. ${belowSentence(state.guess)}` +
+      (food ? ` For packaged food, only ${Math.round(food.ge48)} in 100 products average 4.8 or more.` : '');
     button.focus({ preventScroll: true });
   };
 
@@ -363,6 +399,8 @@ async function buildGuess(root) {
     state.revealed = false;
     range.disabled = false;
     root.classList.remove('is-revealed');
+    if (figure) figure.classList.remove('is-revealed');
+    if (quote) quote.hidden = true;
     hist.innerHTML = '';
     if (state.stop) state.stop();
     showGuess();
@@ -388,7 +426,7 @@ async function buildGuess(root) {
 
 // Bars rise from the slider's track, which is the axis: each value sits where the thumb would
 // sit at that value, half a thumb in from either end.
-function histogramSVG(m, W, H, pending, label) {
+function histogramSVG(m, food, W, H, pending, label) {
   const inset = THUMB_HALF;
   const plotW = W - 2 * inset;
   const x = (v) => inset + ((v - 1) / 4) * plotW;
@@ -408,7 +446,30 @@ function histogramSVG(m, W, H, pending, label) {
     const h = (count / m.maxCount) * plotH;
     d += `M${r2(inset + i * pitch + gap / 2)} ${base}v${r2(-h)}h${r2(pitch - gap)}v${r2(h)}z`;
   });
-  body += `<path class="gs-bars" d="${d}" style="transform-origin:0 ${base}px"/>`;
+  // Packaged food: an outline over the same bands, on the same scale of share per band, so
+  // its height compares directly with the bars. Its fill sits under the bars, its line over them.
+  let foodLine = '';
+  if (food) {
+    const peak = m.maxCount / m.n;
+    let line = `M${r2(inset)} ${base}`;
+    let peakX = 0;
+    let peakY = base;
+    food.shares.forEach((share, i) => {
+      const y = r2(base - (share / peak) * plotH);
+      const x0 = r2(inset + i * pitch);
+      line += `V${y}H${r2(x0 + pitch)}`;
+      if (y < peakY) {
+        peakY = y;
+        peakX = x0;
+      }
+    });
+    line += `V${base}`;
+    body += `<path class="gs-food-area" d="${line}Z"/>`;
+    foodLine =
+      `<path class="gs-food" d="${line}" pathLength="1"/>` +
+      `<text class="gs-food-label" x="${r2(peakX - 8)}" y="${r2(peakY - 10)}" text-anchor="end">Packaged food</text>`;
+  }
+  body += `<path class="gs-bars" d="${d}" style="transform-origin:0 ${base}px"/>${foodLine}`;
 
   let anno = '';
   const xm = crisp(x(m.median) - 0.5);
@@ -421,8 +482,13 @@ function histogramSVG(m, W, H, pending, label) {
 /* 2. The drift: a grid of 100 stars per system, filling as the scene arrives */
 
 async function buildDrift(root) {
-  const items = (await figuresReady).drift;
+  const figures = await figuresReady;
+  const items = figures.drift;
+  const groups = figures.driftGroups || {};
   const moving = motionAllowed();
+  // Each grid's number counts up while its stars fill, over the same stretch of time.
+  const fillMs = (g, total) => g * 90 + total * 7;
+  const decimals = (v) => (Number.isInteger(v) ? 0 : 1);
 
   let markup =
     `<svg class="dr-sprite" aria-hidden="true" focusable="false">` +
@@ -430,6 +496,10 @@ async function buildDrift(root) {
     `<ul class="dr-list" role="list">`;
 
   items.forEach((it, g) => {
+    // A row heading starts each group: rating people, then rating things.
+    if (it.group && it.group !== (items[g - 1] || {}).group && groups[it.group]) {
+      markup += `<li class="dr-group"><p class="label">${esc(groups[it.group])}</p></li>`;
+    }
     const gold = Math.round((it.then || it.now).value);
     const total = Math.round(it.now.value);
     const pair = Boolean(it.then);
@@ -439,17 +509,20 @@ async function buildDrift(root) {
       const col = k % 10;
       const row = 9 - Math.floor(k / 10);
       const cls = k < gold ? 'dr-s1' : k < total ? 'dr-s2' : 'dr-s0';
-      const delay = k < total ? ` style="--d:${Math.round(g * 90 + k * 7)}ms"` : '';
+      const delay = k < total ? ` style="--d:${fillMs(g, k)}ms"` : '';
       uses += `<use href="#dr-star" class="${cls}" x="${col * 24 + 1}" y="${row * 24 + 1}" width="22" height="22"${delay}/>`;
     }
     const aria = pair
       ? `${it.title}, ${lowerFirst(it.measure)}: ${it.then.value}% in ${it.then.label} and ${it.now.value}% in ${it.now.label}. Grid of 100 stars: ${gold} gold and ${total - gold} lighter gold.`
       : `${it.title}, ${lowerFirst(it.measure)}: ${it.now.value}%. Grid of 100 stars: ${gold} gold.`;
     markup +=
-      `<li class="dr-item${pair ? ' dr-pair' : ''}">` +
+      `<li class="dr-item${pair ? ' dr-pair' : ''}" data-value="${it.now.value}" data-ms="${fillMs(g, total)}">` +
       `<svg class="dr-stars${moving ? ' is-pending' : ''}" viewBox="0 0 240 240" role="img" aria-label="${esc(aria)}">${uses}</svg>` +
-      `<p class="dr-num" aria-hidden="true">${it.now.value}%</p>` +
-      `<p class="dr-name label"><a href="${esc(it.source.url)}">${esc(it.name)}<span class="visually-hidden">, source: ${esc(it.source.label)}</span></a></p>` +
+      `<p class="dr-num" aria-hidden="true">${it.now.value.toFixed(decimals(it.now.value))}%</p>` +
+      // Phones show the short name, which carries the threshold, and drop the note.
+      `<p class="dr-name label"><a href="${esc(it.source.url)}"><span class="dr-long">${esc(it.name)}</span>` +
+      (it.short ? `<span class="dr-short" aria-hidden="true">${esc(it.short)}</span>` : '') +
+      `<span class="visually-hidden">, source: ${esc(it.source.label)}</span></a></p>` +
       `<p class="dr-note label" aria-hidden="true">${esc(it.note)}</p>` +
       `</li>`;
   });
@@ -459,6 +532,7 @@ async function buildDrift(root) {
   // the tallest number and labels in its row are placed under it. The labels wrap with the
   // grid's width, so the size settles in a pass or two.
   const list = root.querySelector('.dr-list');
+  const heads = [...list.querySelectorAll('.dr-group')];
   const fit = () => {
     const width = root.clientWidth;
     // Without the stage the page scrolls, so only the width limits a grid.
@@ -468,8 +542,9 @@ async function buildDrift(root) {
     const gapX = parseFloat(style.columnGap) || 0;
     const gapY = parseFloat(style.rowGap) || 0;
     const cols = style.gridTemplateColumns.split(' ').length;
-    const items = [...list.children];
+    const items = [...list.querySelectorAll('.dr-item')];
     const rows = Math.ceil(items.length / cols);
+    const headRoom = heads.reduce((sum, h) => sum + h.getBoundingClientRect().height + gapY, 0);
     const across = (width - (cols - 1) * gapX) / cols;
     let n = Math.floor(Math.min(300, across));
     for (let pass = 0; pass < 5; pass++) {
@@ -478,7 +553,7 @@ async function buildDrift(root) {
       for (let row = 0; row < rows; row++) {
         text += Math.max(...items.slice(row * cols, row * cols + cols).map((it) => it.getBoundingClientRect().height - it.querySelector('.dr-stars').getBoundingClientRect().height));
       }
-      const next = Math.floor(Math.min(300, across, (height - (rows - 1) * gapY - text) / rows));
+      const next = Math.floor(Math.min(300, across, (height - (rows - 1) * gapY - text - headRoom) / rows));
       if (!Number.isFinite(next) || Math.abs(next - n) < 1) break;
       n = Math.max(36, next);
     }
@@ -488,6 +563,31 @@ async function buildDrift(root) {
 
   if (!moving) return;
   const grids = [...root.querySelectorAll('.dr-stars')];
+  const counters = [...root.querySelectorAll('.dr-item')].map((item) => ({
+    el: item.querySelector('.dr-num'),
+    value: Number(item.dataset.value),
+    ms: Number(item.dataset.ms),
+  }));
+  let stopCount = null;
+  const showCount = (e) =>
+    counters.forEach((c) => {
+      c.el.textContent = `${(c.value * e).toFixed(decimals(c.value))}%`;
+    });
+  // Each number runs from 0 to its value as its stars fill, ending with its last star.
+  const countUp = (delay) => {
+    if (stopCount) stopCount();
+    showCount(0);
+    const longest = Math.max(...counters.map((c) => c.ms)) + MOVE_MS;
+    const start = performance.now() + delay;
+    stopCount = animate(longest + delay, () => {
+      const now = performance.now() - start;
+      counters.forEach((c) => {
+        const t = clamp(now / (c.ms + MOVE_MS), 0, 1);
+        const e = 1 - (1 - t) ** 3;
+        c.el.textContent = `${(c.value * e).toFixed(decimals(c.value))}%`;
+      });
+    }, () => showCount(1));
+  };
   // Each arrival fills the grids from empty; a departure empties them once they are hidden and
   // the next scene has arrived. A reader who moves on while the grids are still filling sees
   // them finish at once: 600 stars changing color every frame would otherwise hold up the next
@@ -503,11 +603,14 @@ async function buildDrift(root) {
     if (id === 'everywhere' && previousId !== 'everywhere') {
       unfillAll();
       grids.forEach((grid) => play(grid, 180));
+      countUp(180);
     } else if (previousId === 'everywhere' && id !== 'everywhere') {
       grids.forEach((grid) => {
         grid.classList.add('is-settled');
         grid.classList.remove('is-pending');
       });
+      if (stopCount) stopCount();
+      showCount(1);
       leaveTimer = setTimeout(unfillAll, MOVE_MS + 900);
     }
   });

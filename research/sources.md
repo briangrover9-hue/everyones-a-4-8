@@ -123,5 +123,8 @@ These widely repeated hiring statistics fell apart when traced. None of them is 
 | Claim | Source | Status |
 |---|---|---|
 | 19% of the star ratings Yelp users submitted in 2023 were one star; the average was about 3.8 (US data) | [Yelp 2023 Trust & Safety Report](https://s24.q4cdn.com/521204325/files/doc_downloads/esg/2024/Trust-Safety-Report-2023-V3.pdf), p. 4 | Confirmed in the report |
-| Food products with 10+ reviews on Amazon, Walmart, Target and Kroger in 2025: 51,025; median average 4.27; 7.1% at 4.8+; 32.8% under 4.0; 12.2% of 6.1M food reviews one star | Our count of public retailer reviews from a commercial review collection (raw data not shareable) | Run 2026-10-12 |
+| Packaged food with 10+ reviews on Amazon, Walmart, Target and Kroger in 2025 (tagged food): 61,889 products; median average 4.29; 33.1% at 4.5+; 7.4% at 4.8+; 30.2% under 4.0; 10.9% of 8.1M food reviews one star | Our count of public retailer reviews from a commercial review collection (raw data not shareable); data/food.json | Run 2026-10-12 with whole-number comparisons; an earlier run that compared rounded averages and assigned one category per product gave 51,025, 7.1% and 32.8%, superseded |
+| Beauty products with 10+ reviews, same sources and year: 34,550 products; 27.4% at 4.5+ | Same | Run 2026-10-12 |
+| Airbnb listings with 10+ reviews rated 4.5+, San Francisco and New York, June 2026: 92.3% | Inside Airbnb, our count (research/airbnb_measure.py) | Computed |
+| “Ratings on Airbnb skew high partly because we remove listings that fall short of guest expectations.” | [@AirbnbHelp on X, 5 Oct 2026](https://x.com/AirbnbHelp/status/2107232363365503300) | Read from the post itself |
 | 28.4% of employers who privately said they would definitely not hire a worker again publicly gave 4 or more stars out of 5 | [Filippas, Horton and Golden, NBER working paper 25857](https://www.nber.org/papers/w25857) | Confirmed in the working paper |

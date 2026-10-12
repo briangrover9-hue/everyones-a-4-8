@@ -1,7 +1,7 @@
 // The trust lab: 80 coworkers vouching for each other, drawn as a dot plot that moves round by
 // round. The model lives in lab-model.js; this file draws it and wires up its controls.
 //
-// Scenes 4 and 5 share this one lab. Scene 4 plays one-click likes and real work + vetted vouches
+// Scenes 4 and 5 share this one lab. Scene 4 plays one-click likes and real work + trusted references
 // side by side, on two charts with one axis. Scene 5 asks which rules find the best people: a
 // bar for each set of rules, with its average over a dozen
 // simulated companies, and a tap on a bar runs those rules on this company, with one plain line
@@ -60,7 +60,7 @@ const EXPLAIN = {
   },
   preset: {
     worst: () => 'The worst rules: one-click stars, seen right away, in a feed that shows off the most rated.',
-    vetted: () => 'Real work + vetted vouches: every vouch points at real work, both sides write before either sees the other’s, each says how they know the person, and a vouch counts by who gave it.',
+    vetted: () => 'Real work + trusted references: every rating points at real work, both sides write before either sees the other’s, each says how they know the person, and a vouch counts by who gave it.',
   },
   assumption: () => 'You changed one of our guesses. The chart shows the same rules under it.',
 };
@@ -76,7 +76,7 @@ const explainFor = (why, scale) => {
 // assumptions we chose for vouches tied to work, and the page says so.
 const PRESETS = [
   { id: 'worst', label: 'Worst', settings: WORST },
-  { id: 'vetted', label: 'Real work + vetted vouches', settings: VETTED },
+  { id: 'vetted', label: 'Real work + trusted references', settings: VETTED },
 ];
 
 const SWITCHES = [
@@ -118,7 +118,7 @@ for (const a of SLIDERS) a.initial = a.path.reduce((o, k) => o[k], DEFAULTS);
 // The second number beside each chart: how many people sit at 4.8 or above on the stars
 // scale, the share of judgments that were a yes on the other.
 const SECOND = {
-  stars: { value: (m) => m.top48, text: (v) => `${Math.round(v)} of 80 at ${HIGH_BAR}+` },
+  stars: { value: (m) => m.top48, text: (v) => `${Math.round(v)} rated ${HIGH_BAR}+` },
   yes: { value: (m) => m.yesRate, text: (v) => `said yes ${percent(v)}` },
 };
 
@@ -374,7 +374,7 @@ function mount(root, panel) {
     if (state.scene !== 'lab' || !resultLine || !base.run || !base.run.done) return;
     if (!assumptionsUntouched() || !sameAs(state.settings, VETTED) || m.hits === null) return;
     const b = base.run.snapshot().metrics;
-    const text = `One-click likes piled ${b.top48} of 80 people at ${HIGH_BAR}+ and found ${b.hits} of the 10 best. Real work and vetted vouches found ${m.hits}.`;
+    const text = `One-click likes rated ${b.top48} of the 80 people ${HIGH_BAR} or higher and caught ${b.hits} of the 10 best. Real work and trusted references caught ${m.hits}.`;
     setLine(resultLine, text);
     setLine(verdict, text);
   }
@@ -487,7 +487,7 @@ function mount(root, panel) {
   // The main chart's name: the bar it is running, or the reader's own rules.
   function nameMain() {
     const r = matchingRule();
-    setText(mainName, r ? r.label : sameAs(state.settings, VETTED) && assumptionsUntouched() ? 'Real work + vetted vouches' : 'Your rules');
+    setText(mainName, r ? r.label : sameAs(state.settings, VETTED) && assumptionsUntouched() ? 'Real work + trusted references' : 'Your rules');
   }
 
   function writeNumbers(m, S) {
@@ -591,7 +591,7 @@ function mount(root, panel) {
     const baseY = G.base + 0.5;
     body +=
       `<line class="lab-lane-rule" x1="${G.laneRight + 0.5}" x2="${G.laneRight + 0.5}" y1="${G.plotTop}" y2="${G.base}"/>` +
-      `<text class="lab-label" x="0" y="${labelY}">${G.scale === 'yes' ? 'No yeses' : 'No vouches'}</text>` +
+      `<text class="lab-label" x="0" y="${labelY}">${G.scale === 'yes' ? 'No yeses' : 'No ratings'}</text>` +
       `<line class="lab-axis" x1="0" x2="${G.laneRight - 3}" y1="${baseY}" y2="${baseY}"/>` +
       `<line class="lab-axis" x1="${(G.x1 - G.r - 3).toFixed(1)}" x2="${G.width}" y1="${baseY}" y2="${baseY}"/>`;
     staticLayer.innerHTML = body;
@@ -988,13 +988,21 @@ function mount(root, panel) {
   function renderBars(grow = false) {
     const list = rulesBox.querySelector('.rules-bars');
     const shownRules = [...rules.list].sort((a, b) => b.hits - a.hits);
+    // Each bar's gain over one-click likes, the rules most networks use, in tenths of a person.
+    const likes = ruleFor('likes');
+    const delta = (r) => {
+      if (!likes || r === likes) return '<span class="rules-delta is-base" aria-hidden="true">base</span>';
+      const d = Math.round((r.hits - likes.hits) * 10) / 10;
+      return `<span class="rules-delta${d > 0 ? ' is-up' : ''}" aria-hidden="true">${d > 0 ? '+' : d < 0 ? '−' : '±'}${Math.abs(d).toFixed(1)}</span>`;
+    };
     list.innerHTML = shownRules
       .map(
-        (r) =>
-          `<li><button type="button" class="rules-bar" data-rule="${r.id}" aria-pressed="false">` +
+        (r, i) =>
+          `<li><button type="button" class="rules-bar${i === 0 ? ' is-best' : ''}" data-rule="${r.id}" aria-pressed="false">` +
           `<span class="rules-name">${r.label}</span>` +
           `<span class="rules-track" aria-hidden="true"><span class="rules-fill" style="--v:${(r.hits / 10).toFixed(3)}"></span></span>` +
           `<span class="rules-value">${r.hits.toFixed(1)}<span class="visually-hidden"> of the 10 best on average</span></span>` +
+          delta(r) +
           `</button></li>`,
       )
       .join('');
@@ -1022,14 +1030,15 @@ function mount(root, panel) {
     rulesBox.insertAdjacentHTML(
       'beforeend',
       `<div class="rules-head">` +
-        `<p class="label rules-title" id="rules-title">In our simulation</p>` +
+        `<p class="label rules-title" id="rules-title">Of the 10 best, how many each rule finds</p>` +
+        `<p class="label rules-vs" aria-hidden="true">vs likes</p>` +
         `</div>` +
         `<div class="rules-chart" style="--guess:${(rules.chance / 10).toFixed(4)}">` +
         `<p class="rules-guess label" aria-hidden="true"><span>Guessing</span></p>` +
         `<ol class="rules-bars" role="list"></ol>` +
         `</div>` +
         // The bars are the model's output, not a measurement of any real product.
-        `<p class="rules-caveat">These are simulated, not measured. The direction of each effect comes from research; the sizes are our guesses. Change them under <button type="button" class="text-button" data-action="open-rules" aria-controls="lab-panel" aria-expanded="false">Try other rules</button>.</p>`,
+        `<p class="rules-caveat">Simulated, not measured: the direction of each effect comes from research, and the sizes are our guesses. Change them under <button type="button" class="text-button" data-action="open-rules" aria-controls="lab-panel" aria-expanded="false">Try other rules</button>.</p>`,
     );
     rulesBox.addEventListener('click', (event) => {
       const target = event.target instanceof Element ? event.target : null;
@@ -1201,13 +1210,13 @@ function sliderHtml(a, extra = '') {
 function labTemplate(N) {
   const row = (id, name, hits, second) => `
     <div class="lab-row" data-row="${id}">
-      <p class="lab-row-head"><span class="label lab-row-name"${id === 'main' ? ' data-name="main"' : ''}>${name}</span><span class="lab-row-stats"><span class="lab-row-num" data-num="${hits}">0</span><span class="label lab-row-of">of <span class="lab-row-wide">the </span>10 best<span class="lab-row-wide"> made the top 10</span></span><span class="label lab-row-second" data-num="${second}"> </span></span></p>
+      <p class="lab-row-head"><span class="label lab-row-name"${id === 'main' ? ' data-name="main"' : ''}>${name}</span><span class="lab-row-stats"><span class="lab-row-num" data-num="${hits}">0</span><span class="label lab-row-of">of <span class="lab-row-wide">the </span>10 best<span class="lab-row-wide"> made it</span></span><span class="label lab-row-second" data-num="${second}"> </span></span></p>
       <div class="lab-field-wrap" data-wrap="${id}"><svg class="lab-field" data-field="${id}" role="img" aria-label="A dot plot of ${N} people by score."></svg></div>
     </div>`;
   return `
     <p class="lab-legend label"><span class="lab-legend-item">${keyGlyph('is-dot is-filled')}The 10 most skilled</span> <span class="lab-legend-item">${keyGlyph('is-star')}<span class="lab-legend-star">The 10 rated highest</span></span></p>
     ${row('base', 'One-click likes', 'base-hits', 'base-second')}
-    ${row('main', 'Real work + vetted vouches', 'hits', 'second')}
+    ${row('main', 'Real work + trusted references', 'hits', 'second')}
     <div class="lab-foot">
       <p class="lab-round label">Round 0 of 30</p>
       <button type="button" class="text-button label lab-replay" data-action="replay">Replay</button>

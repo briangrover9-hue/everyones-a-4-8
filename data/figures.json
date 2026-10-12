@@ -1,325 +1,341 @@
 {
-  "_note": "Numbers drawn in the charts. Each traces to research/sources.md. The Airbnb histogram is read from data/airbnb.json.",
-  "whyNow": {
-    "unit": "extra dollars an employer would accept on a bid, for one standard deviation more",
-    "rows": [
-      {
-        "label": "A proposal tailored to the job",
-        "before": 25.67,
-        "after": 14.85
-      },
-      {
-        "label": "A higher reputation score on the site",
-        "before": 27.96,
-        "after": 46.24
-      }
-    ],
-    "beforeLabel": "Before ChatGPT",
-    "afterLabel": "2024",
-    "beforeWhen": "before ChatGPT",
-    "afterWhen": "in 2024",
-    "source": {
-      "label": "Galdin and Silbert (2025), Table 2, columns 2 and 4",
-      "url": "https://arxiv.org/abs/2511.08785"
-    }
-  },
-  "guess": {
-    "group": "both_cities_combined.rated_min10_reviews",
-    "median": 4.84,
-    "n": 15694,
-    "shareAtLeast45": 92.3,
-    "shareAtLeast48": 60.6,
-    "shareBelow40": 0.3,
-    "defaultGuess": 3.0
-  },
-  "drift": [
-    {
-      "id": "harvard",
-      "title": "Harvard College",
-      "measure": "Grades that are A’s",
-      "then": {
-        "label": "2005",
-        "value": 24
-      },
-      "now": {
-        "label": "2025",
-        "value": 60.2
-      },
-      "source": {
-        "label": "Harvard OUE (2025)",
-        "url": "https://oue.fas.harvard.edu/faculty-resources/report-on-grading/"
-      },
-      "name": "Harvard grades that are A’s",
-      "note": "Up from 24% in 2005"
-    },
-    {
-      "id": "ebay",
-      "title": "eBay sellers",
-      "measure": "Feedback that is positive",
-      "now": {
-        "label": "2011 to 2014, average seller",
-        "value": 99.3
-      },
-      "source": {
-        "label": "Nosko and Tadelis (2015)",
-        "url": "https://www.nber.org/system/files/working_papers/w20830/w20830.pdf"
-      },
-      "name": "eBay feedback that’s positive",
-      "note": "For the average seller"
-    },
-    {
-      "id": "linkedin",
-      "title": "LinkedIn endorsements",
-      "measure": "An endorsement can only say yes",
-      "now": {
-        "label": "A billion given in under six months",
-        "value": 100
-      },
-      "source": {
-        "label": "LinkedIn (2013)",
-        "url": "https://web.archive.org/web/20130308140056/http://blog.linkedin.com:80/2013/03/06/1-billion-endorsements-given-on-linkedin-infographic/"
-      },
-      "name": "LinkedIn endorsements",
-      "note": "Can only say yes"
-    },
-    {
-      "id": "github",
-      "title": "GitHub stars",
-      "measure": "A star can only say yes",
-      "now": {
-        "label": "6.0 million suspected fakes",
-        "value": 100
-      },
-      "source": {
-        "label": "He et al. (ICSE 2026)",
-        "url": "https://cmustrudel.github.io/papers/icse2026fakestars.pdf"
-      },
-      "name": "GitHub stars",
-      "note": "Can only say yes"
-    },
-    {
-      "id": "airbnb2015",
-      "title": "Airbnb listings",
-      "measure": "Rated 4.5 or higher",
-      "now": {
-        "label": "2015",
-        "value": 94
-      },
-      "source": {
-        "label": "Zervas, Proserpio and Byers (2015)",
-        "url": "https://internet.psych.wisc.edu/wp-content/uploads/532-Master/532-UnitPages/Unit-10/Zervas_2015.pdf"
-      },
-      "name": "Airbnb listings, 2015",
-      "note": "Rated 4.5 or higher"
-    },
-    {
-      "id": "tripadvisor2015",
-      "title": "TripAdvisor hotels",
-      "measure": "Rated 4.5 or higher. People rate businesses honestly.",
-      "now": {
-        "label": "2015",
-        "value": 26
-      },
-      "source": {
-        "label": "Zervas, Proserpio and Byers (2015)",
-        "url": "https://internet.psych.wisc.edu/wp-content/uploads/532-Master/532-UnitPages/Unit-10/Zervas_2015.pdf"
-      },
-      "name": "TripAdvisor hotels, 2015",
-      "note": "Rated 4.5 or higher"
-    }
+ "_note": "Numbers drawn in the charts. Each traces to research/sources.md. The Airbnb histogram is read from data/airbnb.json.",
+ "whyNow": {
+  "unit": "extra dollars an employer would accept on a bid, for one standard deviation more",
+  "rows": [
+   {
+    "label": "A proposal tailored to the job",
+    "before": 25.67,
+    "after": 14.85
+   },
+   {
+    "label": "A higher reputation score on the site",
+    "before": 27.96,
+    "after": 46.24
+   }
   ],
-  "validity": {
-    "note": "Operational validity for overall job performance. null means not re-estimated in 2022.",
-    "rows": [
-      {
-        "method": "Structured interviews",
-        "y1998": 0.51,
-        "y2022": 0.42
-      },
-      {
-        "method": "Job knowledge tests",
-        "y1998": 0.48,
-        "y2022": 0.4
-      },
-      {
-        "method": "Biodata questionnaires",
-        "y1998": 0.35,
-        "y2022": 0.38
-      },
-      {
-        "method": "Work samples",
-        "y1998": 0.54,
-        "y2022": 0.33,
-        "highlight": true
-      },
-      {
-        "method": "Cognitive ability tests",
-        "y1998": 0.51,
-        "y2022": 0.31
-      },
-      {
-        "method": "Integrity tests",
-        "y1998": 0.41,
-        "y2022": 0.31
-      },
-      {
-        "method": "Unstructured interviews",
-        "y1998": 0.38,
-        "y2022": 0.19
-      },
-      {
-        "method": "Conscientiousness",
-        "y1998": 0.31,
-        "y2022": 0.19
-      },
-      {
-        "method": "Years of experience",
-        "y1998": 0.18,
-        "y2022": 0.07,
-        "highlight": true
-      },
-      {
-        "method": "Peer ratings",
-        "y1998": 0.49,
-        "y2022": null
-      },
-      {
-        "method": "Reference checks",
-        "y1998": 0.26,
-        "y2022": null,
-        "highlight": true
-      },
-      {
-        "method": "Years of education",
-        "y1998": 0.1,
-        "y2022": null,
-        "highlight": true
-      }
-    ],
-    "sources": [
-      {
-        "label": "Schmidt and Hunter (1998), Table 1",
-        "url": "https://doi.org/10.1037/0033-2909.124.2.262"
-      },
-      {
-        "label": "Sackett, Zhang, Berry and Lievens (2022), Table 3",
-        "url": "https://doi.org/10.1037/apl0000994"
-      }
-    ]
-  },
-  "rules": {
-    "_note": "Each setting's average over the 12 simulated companies in tools/lab-check.mjs (run seed 1). The check fails if any value here drifts from the model.",
-    "chance": 1.25,
-    "settings": [
-      {
-        "id": "vetted",
-        "label": "Real work + vetted vouches",
-        "scale": "stars",
-        "settings": {
-          "scale": "stars",
-          "type": "work",
-          "vis": "blind",
-          "who": "said",
-          "feed": "reputation"
-        },
-        "hits": 8.33,
-        "finds": "real work and vetted vouches find",
-        "cost": "every vouch points at real work and waits for both sides"
-      },
-      {
-        "id": "likes",
-        "label": "One-click likes",
-        "scale": "stars",
-        "settings": {
-          "scale": "stars",
-          "type": "tap",
-          "vis": "visible",
-          "who": "anyone",
-          "feed": "count"
-        },
-        "hits": 4.5,
-        "finds": "one-click likes find",
-        "cost": "about {n} of 80 people end up rated 4.8 or higher",
-        "costValue": 23.6,
-        "costMetric": "top48"
-      },
-      {
-        "id": "written",
-        "label": "Written reviews",
-        "scale": "stars",
-        "settings": {
-          "scale": "stars",
-          "type": "written",
-          "vis": "visible",
-          "who": "anyone",
-          "feed": "count"
-        },
-        "hits": 4.75,
-        "finds": "written reviews find",
-        "cost": "people write one a round instead of tapping three"
-      },
-      {
-        "id": "hidden",
-        "label": "Hidden until both write",
-        "scale": "stars",
-        "settings": {
-          "scale": "stars",
-          "type": "tap",
-          "vis": "blind",
-          "who": "anyone",
-          "feed": "count"
-        },
-        "hits": 4.83,
-        "finds": "hiding reviews until both write finds",
-        "cost": "every review waits for the other side"
-      },
-      {
-        "id": "said",
-        "label": "Says how they know you",
-        "scale": "stars",
-        "settings": {
-          "scale": "stars",
-          "type": "tap",
-          "vis": "visible",
-          "who": "said",
-          "feed": "count"
-        },
-        "hits": 4.75,
-        "finds": "saying how you know someone finds",
-        "cost": "a stranger’s vouch counts only a quarter as much"
-      },
-      {
-        "id": "work",
-        "label": "Tied to real work",
-        "scale": "stars",
-        "settings": {
-          "scale": "stars",
-          "type": "work",
-          "vis": "visible",
-          "who": "anyone",
-          "feed": "count"
-        },
-        "hits": 6.08,
-        "finds": "tying praise to real work finds",
-        "cost": "each vouch has to point at something the person made"
-      },
-      {
-        "id": "linkedin",
-        "label": "LinkedIn-style endorsements",
-        "scale": "yes",
-        "settings": {
-          "scale": "yes",
-          "type": "tap",
-          "vis": "visible",
-          "who": "anyone",
-          "feed": "count"
-        },
-        "hits": 2.42,
-        "finds": "LinkedIn-style endorsements find",
-        "cost": "people say yes {n}% of the time",
-        "costValue": 78,
-        "costMetric": "yesRate"
-      }
-    ]
+  "beforeLabel": "Before ChatGPT",
+  "afterLabel": "2024",
+  "beforeWhen": "before ChatGPT",
+  "afterWhen": "in 2024",
+  "source": {
+   "label": "Galdin and Silbert (2025), Table 2, columns 2 and 4",
+   "url": "https://arxiv.org/abs/2511.08785"
   }
+ },
+ "guess": {
+  "group": "both_cities_combined.rated_min10_reviews",
+  "median": 4.84,
+  "n": 15694,
+  "shareAtLeast45": 92.3,
+  "shareAtLeast48": 60.6,
+  "shareBelow40": 0.3,
+  "defaultGuess": 3.0
+ },
+ "drift": [
+  {
+   "id": "harvard",
+   "title": "Harvard College",
+   "measure": "Grades that are A’s",
+   "then": {
+    "label": "2005",
+    "value": 24
+   },
+   "now": {
+    "label": "2025",
+    "value": 60.2
+   },
+   "source": {
+    "label": "Harvard OUE (2025)",
+    "url": "https://oue.fas.harvard.edu/faculty-resources/report-on-grading/"
+   },
+   "name": "Harvard grades that are A’s",
+   "note": "Up from 24% in 2005",
+   "group": "people",
+   "short": "Harvard A’s"
+  },
+  {
+   "id": "ebay",
+   "title": "eBay sellers",
+   "measure": "Feedback that is positive",
+   "now": {
+    "label": "2011 to 2014, average seller",
+    "value": 99.3
+   },
+   "source": {
+    "label": "Nosko and Tadelis (2015)",
+    "url": "https://www.nber.org/system/files/working_papers/w20830/w20830.pdf"
+   },
+   "name": "eBay feedback that’s positive",
+   "note": "For the average seller",
+   "group": "people",
+   "short": "eBay positive"
+  },
+  {
+   "id": "airbnb2026",
+   "group": "people",
+   "title": "Airbnb listings",
+   "measure": "Rated 4.5 or higher",
+   "now": {
+    "label": "2026, San Francisco and New York",
+    "value": 92.3
+   },
+   "source": {
+    "label": "Inside Airbnb (2026), our count",
+    "url": "methods.html#m-airbnb"
+   },
+   "name": "Airbnb listings",
+   "note": "Rated 4.5+, 2026",
+   "short": "Airbnb 4.5+"
+  },
+  {
+   "id": "tripadvisor2015",
+   "title": "TripAdvisor hotels",
+   "measure": "Rated 4.5 or higher",
+   "now": {
+    "label": "2015",
+    "value": 26
+   },
+   "source": {
+    "label": "Zervas, Proserpio and Byers (2015)",
+    "url": "https://internet.psych.wisc.edu/wp-content/uploads/532-Master/532-UnitPages/Unit-10/Zervas_2015.pdf"
+   },
+   "name": "TripAdvisor hotels",
+   "note": "Rated 4.5+, 2015",
+   "group": "things",
+   "short": "Hotels, 2015"
+  },
+  {
+   "id": "food2025",
+   "group": "things",
+   "title": "Packaged food",
+   "measure": "Products averaging 4.5 or higher",
+   "now": {
+    "label": "2025, Amazon, Walmart, Target and Kroger",
+    "value": 33.1
+   },
+   "source": {
+    "label": "Our count of 2025 store reviews",
+    "url": "methods.html#m-food"
+   },
+   "name": "Packaged food",
+   "note": "Rated 4.5+, 2025",
+   "short": "Food, 2025"
+  },
+  {
+   "id": "beauty2025",
+   "group": "things",
+   "title": "Beauty products",
+   "measure": "Products averaging 4.5 or higher",
+   "now": {
+    "label": "2025, Amazon, Walmart, Target and Kroger",
+    "value": 27.4
+   },
+   "source": {
+    "label": "Our count of 2025 store reviews",
+    "url": "methods.html#m-food"
+   },
+   "name": "Beauty products",
+   "note": "Rated 4.5+, 2025",
+   "short": "Beauty, 2025"
+  }
+ ],
+ "validity": {
+  "note": "Operational validity for overall job performance. null means not re-estimated in 2022.",
+  "rows": [
+   {
+    "method": "Structured interviews",
+    "y1998": 0.51,
+    "y2022": 0.42
+   },
+   {
+    "method": "Job knowledge tests",
+    "y1998": 0.48,
+    "y2022": 0.4
+   },
+   {
+    "method": "Biodata questionnaires",
+    "y1998": 0.35,
+    "y2022": 0.38
+   },
+   {
+    "method": "Work samples",
+    "y1998": 0.54,
+    "y2022": 0.33,
+    "highlight": true
+   },
+   {
+    "method": "Cognitive ability tests",
+    "y1998": 0.51,
+    "y2022": 0.31
+   },
+   {
+    "method": "Integrity tests",
+    "y1998": 0.41,
+    "y2022": 0.31
+   },
+   {
+    "method": "Unstructured interviews",
+    "y1998": 0.38,
+    "y2022": 0.19
+   },
+   {
+    "method": "Conscientiousness",
+    "y1998": 0.31,
+    "y2022": 0.19
+   },
+   {
+    "method": "Years of experience",
+    "y1998": 0.18,
+    "y2022": 0.07,
+    "highlight": true
+   },
+   {
+    "method": "Peer ratings",
+    "y1998": 0.49,
+    "y2022": null
+   },
+   {
+    "method": "Reference checks",
+    "y1998": 0.26,
+    "y2022": null,
+    "highlight": true
+   },
+   {
+    "method": "Years of education",
+    "y1998": 0.1,
+    "y2022": null,
+    "highlight": true
+   }
+  ],
+  "sources": [
+   {
+    "label": "Schmidt and Hunter (1998), Table 1",
+    "url": "https://doi.org/10.1037/0033-2909.124.2.262"
+   },
+   {
+    "label": "Sackett, Zhang, Berry and Lievens (2022), Table 3",
+    "url": "https://doi.org/10.1037/apl0000994"
+   }
+  ]
+ },
+ "rules": {
+  "_note": "Each setting's average over the 12 simulated companies in tools/lab-check.mjs (run seed 1). The check fails if any value here drifts from the model.",
+  "chance": 1.25,
+  "settings": [
+   {
+    "id": "vetted",
+    "label": "Real work + trusted references",
+    "scale": "stars",
+    "settings": {
+     "scale": "stars",
+     "type": "work",
+     "vis": "blind",
+     "who": "said",
+     "feed": "reputation"
+    },
+    "hits": 8.33,
+    "finds": "real work and trusted references find",
+    "cost": "every rating points at real work and waits for both sides to write"
+   },
+   {
+    "id": "likes",
+    "label": "One-click likes",
+    "scale": "stars",
+    "settings": {
+     "scale": "stars",
+     "type": "tap",
+     "vis": "visible",
+     "who": "anyone",
+     "feed": "count"
+    },
+    "hits": 4.5,
+    "finds": "one-click likes find",
+    "cost": "about {n} of 80 people end up rated 4.8 or higher",
+    "costValue": 23.6,
+    "costMetric": "top48"
+   },
+   {
+    "id": "written",
+    "label": "Written reviews",
+    "scale": "stars",
+    "settings": {
+     "scale": "stars",
+     "type": "written",
+     "vis": "visible",
+     "who": "anyone",
+     "feed": "count"
+    },
+    "hits": 4.75,
+    "finds": "written reviews find",
+    "cost": "people write one a round instead of tapping three"
+   },
+   {
+    "id": "hidden",
+    "label": "Hidden until both write",
+    "scale": "stars",
+    "settings": {
+     "scale": "stars",
+     "type": "tap",
+     "vis": "blind",
+     "who": "anyone",
+     "feed": "count"
+    },
+    "hits": 4.83,
+    "finds": "hiding reviews until both write finds",
+    "cost": "every review waits for the other side"
+   },
+   {
+    "id": "said",
+    "label": "Says how they know you",
+    "scale": "stars",
+    "settings": {
+     "scale": "stars",
+     "type": "tap",
+     "vis": "visible",
+     "who": "said",
+     "feed": "count"
+    },
+    "hits": 4.75,
+    "finds": "saying how you know someone finds",
+    "cost": "a stranger’s rating counts only a quarter as much"
+   },
+   {
+    "id": "work",
+    "label": "Tied to real work",
+    "scale": "stars",
+    "settings": {
+     "scale": "stars",
+     "type": "work",
+     "vis": "visible",
+     "who": "anyone",
+     "feed": "count"
+    },
+    "hits": 6.08,
+    "finds": "tying praise to real work finds",
+    "cost": "each rating has to point at something the person made"
+   },
+   {
+    "id": "linkedin",
+    "label": "LinkedIn-style endorsements",
+    "scale": "yes",
+    "settings": {
+     "scale": "yes",
+     "type": "tap",
+     "vis": "visible",
+     "who": "anyone",
+     "feed": "count"
+    },
+    "hits": 2.42,
+    "finds": "LinkedIn-style endorsements find",
+    "cost": "people say yes {n}% of the time",
+    "costValue": 78,
+    "costMetric": "yesRate"
+   }
+  ]
+ },
+ "driftGroups": {
+  "people": "Rating people",
+  "things": "Rating things, share at 4.5+ stars"
+ }
 }

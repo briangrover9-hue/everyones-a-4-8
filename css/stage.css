@@ -328,6 +328,36 @@ html.stage-on .scene.is-leaving {
   line-height: 1.42;
   color: var(--ink-body);
 }
+/* The close's last word is the author's own, in full ink. */
+.scene-coda {
+  color: var(--ink);
+}
+/* After the guess, Airbnb's own explanation of its ratings, quoted at a smaller size. */
+.guess-quote {
+  max-width: 30rem;
+  font-size: clamp(0.9375rem, 0.88rem + 0.2vw, 1.0625rem);
+  line-height: 1.42;
+  color: var(--ink-body);
+}
+.guess-quote[hidden] {
+  display: none;
+}
+/* After the reveal on the shortest phones, the small label over the big number gives way: the
+   hint under the chart already names it the typical rating. */
+@media (max-width: 959.98px) and (max-height: 599.98px) {
+  html.stage-on .is-revealed .gs-number-label {
+    visibility: hidden;
+  }
+}
+/* The shortest phones keep the answer and the chart; the quote, also in the notes, gives way. */
+@media (max-width: 959.98px) and (max-height: 599.98px) {
+  html.stage-on .guess-quote {
+    display: none;
+  }
+}
+.guess-quote a {
+  white-space: nowrap;
+}
 .byline {
   margin-top: 4px;
 }
@@ -339,6 +369,33 @@ html.stage-on .scene.is-leaving {
 }
 .drift-key.scene-links {
   display: block;
+}
+/* Short phones: the close's three paragraphs step down a size, and on the shortest the line
+   under the 5.0 gives way, since the header already shows the page's 5.0. */
+@media (max-width: 959.98px) and (max-height: 700px) {
+  html.stage-on .scene-close .scene-body {
+    font-size: 1rem;
+    line-height: 1.4;
+  }
+}
+@media (max-width: 959.98px) and (max-height: 599.98px) {
+  html.stage-on .scene-close .scene-visual {
+    display: none;
+  }
+}
+@media (max-width: 359.98px) {
+  html.stage-on .scene-close .scene-title {
+    font-size: 1.5rem;
+  }
+  html.stage-on .scene-close .scene-body {
+    font-size: 0.9375rem;
+  }
+}
+/* The shortest phones keep the grids' links and let the key give way; each grid names itself. */
+@media (max-width: 719.98px) and (max-height: 599.98px) {
+  html.stage-on .drift-key-text {
+    display: none;
+  }
 }
 .why-button {
   display: inline-block;

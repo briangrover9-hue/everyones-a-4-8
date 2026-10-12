@@ -4,13 +4,13 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Everyone’s a 4.8</title>
-  <meta name="description" content="AI writes the resumes and AI reads them, so hiring runs on who vouches for you. Why trust signals drift to the top, and what keeps a vouch worth something.">
+  <meta name="description" content="We rate food and hotels honestly and go easy on people. What that means for hiring, now that AI writes the resumes and reads them too.">
   <link rel="canonical" href="https://briangrover9-hue.github.io/everyones-a-4-8/">
   <meta name="author" content="Brian Grover">
   <meta name="robots" content="noindex">
   <meta property="og:type" content="article">
   <meta property="og:title" content="Everyone’s a 4.8">
-  <meta property="og:description" content="AI writes the resumes and AI reads them, so hiring runs on who vouches for you. Why trust signals drift to the top, and what keeps a vouch worth something.">
+  <meta property="og:description" content="We rate food and hotels honestly and go easy on people. What that means for hiring, now that AI writes the resumes and reads them too.">
   <meta property="og:url" content="https://briangrover9-hue.github.io/everyones-a-4-8/">
   <meta property="og:image" content="https://briangrover9-hue.github.io/everyones-a-4-8/assets/og.png">
   <meta property="og:image:width" content="1200">
@@ -19,7 +19,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:creator" content="@briantgrover">
   <meta name="twitter:title" content="Everyone’s a 4.8">
-  <meta name="twitter:description" content="AI writes the resumes and AI reads them, so hiring runs on who vouches for you. Why trust signals drift to the top, and what keeps a vouch worth something.">
+  <meta name="twitter:description" content="We rate food and hotels honestly and go easy on people. What that means for hiring, now that AI writes the resumes and reads them too.">
   <meta name="twitter:image" content="https://briangrover9-hue.github.io/everyones-a-4-8/assets/og.png">
   <meta name="theme-color" content="#f3eee3">
   <link rel="icon" href="assets/star.svg" type="image/svg+xml">
@@ -33,13 +33,13 @@
   <script nomodule>document.documentElement.classList.remove('js', 'stage-on');</script>
   <link rel="preload" href="fonts/Newsreader-normal-300-700.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/IBMPlexMono-normal-500.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="css/style.css?v=9">
-  <link rel="stylesheet" href="css/stage.css?v=9">
-  <link rel="stylesheet" href="css/charts.css?v=9">
-  <link rel="stylesheet" href="css/lab.css?v=10">
-  <script type="module" src="js/stage.js?v=9"></script>
-  <script type="module" src="js/charts.js?v=9"></script>
-  <script type="module" src="js/lab.js?v=9"></script>
+  <link rel="stylesheet" href="css/style.css?v=11">
+  <link rel="stylesheet" href="css/stage.css?v=11">
+  <link rel="stylesheet" href="css/charts.css?v=11">
+  <link rel="stylesheet" href="css/lab.css?v=11">
+  <script type="module" src="js/stage.js?v=11"></script>
+  <script type="module" src="js/charts.js?v=11"></script>
+  <script type="module" src="js/lab.js?v=11"></script>
   <link rel="modulepreload" href="js/motion.js">
   <link rel="modulepreload" href="js/stars.js">
   <link rel="modulepreload" href="js/lab-model.js">
@@ -52,7 +52,7 @@
       if (!res.ok) throw new Error(`${path} returned HTTP ${res.status}`);
       return res.json();
     });
-    window.chartData = { figures: get('data/figures.json'), airbnb: get('data/airbnb.json') };
+    window.chartData = { figures: get('data/figures.json'), airbnb: get('data/airbnb.json'), food: get('data/food.json') };
     Object.values(window.chartData).forEach((request) => request.catch(() => {})); // each chart reports its own failure
   </script>
 </head>
@@ -74,7 +74,7 @@
     <section class="scene scene-open is-current" id="start" data-section="0" aria-labelledby="title">
       <div class="scene-text">
         <h1 class="scene-title scene-title-big" id="title" tabindex="-1" data-words>Everyone’s a 4.8</h1>
-        <p class="scene-body" data-rise>We’ll happily tell a restaurant its fries were soggy. Rate a person, a host, a driver, a coworker, and almost everyone gets a 4.8. Now AI writes the resumes and AI reads them, so hiring leans on the ratings we’re worst at&nbsp;giving.</p>
+        <p class="scene-body" data-rise>When I booked an Airbnb for my dad’s 70th, every place I looked at was rated 4.8 or higher. The one we picked was lovely, but the stars hadn’t told me that. We rate food and hotels honestly and go easy on people, and now that AI writes the resumes and reads them too, hiring leans on the ratings we’re worst at&nbsp;giving.</p>
         <p class="byline label" data-rise>By <a href="https://www.linkedin.com/in/briantgrover">Brian Grover</a> <span aria-hidden="true">·</span> <a href="https://x.com/briantgrover">@briantgrover</a> <span aria-hidden="true">·</span> <a href="methods.html#methods">Methods and sources</a></p>
       </div>
       <div class="scene-visual" data-rise>
@@ -90,13 +90,14 @@
       <div class="scene-text">
         <h2 class="scene-title" id="h-guess" tabindex="-1" data-words>Booking an Airbnb? Guess the typical rating.</h2>
         <p class="scene-body line" id="guess-body" data-rise>Think of a place with at least 10 reviews, rated out of 5, and drag the star to your&nbsp;guess.</p>
+        <p class="guess-quote" id="guess-quote" hidden>Airbnb’s own explanation: ratings “skew high partly because we remove listings that fall short of guest expectations.” <a href="https://x.com/AirbnbHelp/status/2107232363365503300">Airbnb&nbsp;Help on X, October&nbsp;2026</a></p>
       </div>
       <div class="scene-visual" data-rise>
         <figure class="guess" id="fig-guess" aria-labelledby="h-guess" aria-describedby="guess-cap">
           <div id="guess-root" class="guess-root">
             <p class="fallback">The typical Airbnb listing in San Francisco and New York with at least 10 reviews is rated 4.84 out of 5. Half of these places are rated 4.84 or higher, and fewer than 1 in 100 falls below 4.</p>
           </div>
-          <figcaption class="label guess-cap" id="guess-cap">Places with 10+ reviews, San Francisco and New York, June&nbsp;2026 <span aria-hidden="true">·</span> <a href="https://insideairbnb.com/get-the-data/">Inside&nbsp;Airbnb</a> <span aria-hidden="true">·</span> <a href="https://github.com/briangrover9-hue/everyones-a-4-8/blob/main/research/airbnb_measure.py">Our&nbsp;code</a></figcaption>
+          <figcaption class="label guess-cap" id="guess-cap">Places with 10+ reviews, San Francisco and New York, June&nbsp;2026 <span aria-hidden="true">·</span> <a href="https://insideairbnb.com/get-the-data/">Inside&nbsp;Airbnb</a> <span aria-hidden="true">·</span> <a href="https://github.com/briangrover9-hue/everyones-a-4-8/blob/main/research/airbnb_measure.py">Our&nbsp;code</a> <span aria-hidden="true">·</span> <a href="methods.html#m-food">Food:&nbsp;2025 store&nbsp;reviews</a></figcaption>
         </figure>
       </div>
     </section>
@@ -105,8 +106,8 @@
     <section class="scene" id="everywhere" data-section="2" aria-labelledby="h-drift">
       <div class="scene-text">
         <h2 class="scene-title" id="h-drift" tabindex="-1" data-words>We go easy on people</h2>
-        <p class="scene-body" data-rise>Grades, eBay sellers, Airbnb hosts: when a person is on the other end, the scores crowd the top. Food gets no mercy: 1 in 5 Yelp ratings was one star, and a third of packaged foods average under 4&nbsp;stars.</p>
-        <p class="label drift-key scene-links" data-rise>Each grid is 100 stars. Gold is the share at the top of each scale. Hotels, rated as businesses, spread out. <a href="methods.html#m-drift">All sources</a> <span aria-hidden="true">·</span> <button type="button" class="text-button why-button" aria-controls="why-drift" aria-expanded="false">Why?</button></p>
+        <p class="scene-body" data-rise>Grades, sellers, hosts: when a person is on the other end, the scores crowd the top. When it’s a thing, like a hotel room or a jar of salsa, people say what they think, and 1 in 5 Yelp ratings in 2023 was one&nbsp;star.</p>
+        <p class="label drift-key scene-links" data-rise><span class="drift-key-text">Each grid is 100 stars. Gold is the share at the top: A’s, positive feedback, or 4.5 stars and&nbsp;up. </span><a href="methods.html#m-drift">All sources</a> <span aria-hidden="true">·</span> <button type="button" class="text-button why-button" aria-controls="why-drift" aria-expanded="false">Why?</button></p>
       </div>
       <aside class="why-card" id="why-drift" aria-labelledby="why-drift-title" tabindex="-1">
         <div class="why-card-head"><p class="label why-card-title" id="why-drift-title">Why ratings drift</p><button type="button" class="text-button label" data-why-close>Close</button></div>
@@ -128,16 +129,16 @@
     <section class="scene scene-lab" id="lab" data-section="3" data-beat="lab" aria-label="The lab">
       <div class="scene-text">
         <div class="beat" data-beat="lab">
-          <h2 class="scene-title" id="h-lab" tabindex="-1" data-words>One-click likes miss half the best people. Real work and vetted vouches find&nbsp;them.</h2>
-          <p class="scene-body" id="lab-body" data-rise>The same 80 simulated coworkers, rated two ways at once. On top, one-click likes. Below, every vouch has to point at real work, and counts more when it comes from someone whose past calls held&nbsp;up.</p>
-          <p class="lab-verdict line" id="lab-verdict" aria-hidden="true"></p>
+          <h2 class="scene-title" id="h-lab" tabindex="-1" data-words>Likes miss half the best people. Real work and trusted references find&nbsp;them.</h2>
+          <p class="scene-body" id="lab-body" data-rise>The same 80 pretend coworkers, rated two ways, and we know who is truly best. On top, they rate each other with one-click likes. Below, every rating has to point at real work, and counts more from people whose past picks turned out&nbsp;right.</p>
           <p class="label scene-links" data-rise><button type="button" class="text-button why-button" aria-controls="why-lab" aria-expanded="false">Why?</button></p>
+          <p class="lab-verdict line" id="lab-verdict" aria-hidden="true"></p>
         </div>
         <div class="beat" data-beat="compare" id="compare">
           <h2 class="scene-title" id="h-compare" tabindex="-1" data-words>Which rules find the best people?</h2>
           <p class="scene-body" id="compare-note" data-rise>Shortlist the top 10 of these 80 people. How many of the 10 truly best make it? Each bar is the average across 12 simulated companies. Tap one to run&nbsp;it.</p>
           <div class="rules" id="rules" data-rise aria-labelledby="rules-title">
-            <p class="fallback">This chart needs JavaScript. In our simulation, of the 10 most skilled people, the top 10 by score finds about 8 with real work and vetted vouches, about 6 when praise is tied to real work, about 5 with written reviews, hidden reviews or saying how you know someone, about 5 with one-click likes, and about 2 with LinkedIn-style endorsements. Guessing finds about 1. These are simulated, not measured.</p>
+            <p class="fallback">This chart needs JavaScript. In our simulation, of the 10 most skilled people, the top 10 by score finds about 8 with real work and trusted references, about 6 when praise is tied to real work, about 5 with written reviews, hidden reviews or saying how you know someone, about 5 with one-click likes, and about 2 with LinkedIn-style endorsements. Guessing finds about 1. These are simulated, not measured.</p>
           </div>
           <p class="beat-links label scene-links" data-rise>
             <button type="button" class="text-button" id="rules-open" aria-controls="lab-panel" aria-expanded="false">Try other rules</button>
@@ -147,7 +148,7 @@
       <aside class="why-card" id="why-lab" aria-labelledby="why-lab-title" tabindex="-1">
         <div class="why-card-head"><p class="label why-card-title" id="why-lab-title">How the lab works</p><button type="button" class="text-button label" data-why-close>Close</button></div>
         <p>It’s a simulation written for this page: 80 coworkers, each with a hidden skill level, rate each other for 30 rounds. Half the ratings go to people they worked with and half to whoever a feed shows, and the feed favors whoever has the most. Each one-tap rating is judged against the current average, plus a little, so with nothing fixed to judge against, the scores climb.</p>
-        <p>A vouch that points at real work can be checked against the work, so it says more about skill than about who is well known. Hiring research finds the same thing: a work sample, where a candidate does a piece of the real job, predicts job performance better than years of experience do (<a href="https://doi.org/10.1037/apl0000994">Sackett and colleagues, 2022</a>). In the lab, how firmly real work anchors a rating is our assumption, and “Try other rules” lets you change&nbsp;it.</p>
+        <p>A rating that points at real work can be checked against the work, so it says more about skill than about who is well known. Hiring research finds the same thing: a work sample, where a candidate does a piece of the real job, predicts job performance better than years of experience do (<a href="https://doi.org/10.1037/apl0000994">Sackett and colleagues, 2022</a>). In the lab, how firmly real work anchors a rating is our assumption, and “Try other rules” lets you change&nbsp;it.</p>
         <p class="label why-card-src">Every rule and number: <a href="methods.html#m-lab">methods</a> <span aria-hidden="true">·</span> <a href="https://github.com/briangrover9-hue/everyones-a-4-8/blob/main/js/lab-model.js">the&nbsp;code</a></p>
       </aside>
       <div class="scene-visual" data-rise>
@@ -171,8 +172,9 @@
     <section class="scene scene-close" id="hiring" data-section="4" aria-labelledby="h-hiring">
       <div class="scene-text">
         <h2 class="scene-title" id="h-hiring" tabindex="-1" data-words>What this means for hiring</h2>
-        <p class="scene-body" data-rise>We’re good at judging things and bad at judging each other. On one freelance site, 28% of employers who privately said they’d never rehire a worker still gave that worker 4 stars or more in&nbsp;public.</p>
-        <p class="scene-body" data-rise>A resume written by AI is the hiring version of a one-click like. So lean on signals that are hard to fake: a piece of real work, references asked about specific work they saw, and more weight on people whose past calls held&nbsp;up.</p>
+        <p class="scene-body" data-rise>Shortlist those 80 people by likes and about half the best make the cut. With real work and trusted references, about 8 in 10 do. Real data points the same way: on one freelance site, 28% of employers who privately said they’d never rehire a worker still gave 4 stars or more in&nbsp;public.</p>
+        <p class="scene-body" data-rise>AI now writes the resume and reads it. So ask for a piece of real work, ask references about specific work they saw, and trust people whose past recommendations held&nbsp;up.</p>
+        <p class="scene-body scene-coda" data-rise>I made this after that Airbnb search. How are you judging people when everyone looks like a&nbsp;4.8?</p>
         <p class="label scene-links" data-rise><button type="button" class="text-button why-button" aria-controls="why-hiring" aria-expanded="false">Why?</button></p>
         <p class="byline label" data-rise>By <a href="https://www.linkedin.com/in/briantgrover">Brian Grover</a> <span aria-hidden="true">·</span> <a href="https://x.com/briantgrover">@briantgrover</a> <span aria-hidden="true">·</span> <a href="methods.html#methods">Methods and sources</a></p>
       </div>
@@ -198,7 +200,7 @@
       <li><button type="button" data-go="0" aria-label="Scene 1 of 6: Everyone’s a 4.8" aria-current="step"></button></li>
       <li><button type="button" data-go="1" aria-label="Scene 2 of 6: the Airbnb guess"></button></li>
       <li><button type="button" data-go="2" aria-label="Scene 3 of 6: we go easy on people"></button></li>
-      <li><button type="button" data-go="3" aria-label="Scene 4 of 6: one-click likes against real work and vetted vouches"></button></li>
+      <li><button type="button" data-go="3" aria-label="Scene 4 of 6: likes against real work and trusted references"></button></li>
       <li><button type="button" data-go="4" aria-label="Scene 5 of 6: which rules find the best people"></button></li>
       <li><button type="button" data-go="5" aria-label="Scene 6 of 6: what this means for hiring"></button></li>
     </ol>

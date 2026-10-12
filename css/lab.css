@@ -396,6 +396,9 @@
 .rules {
   --name-w: 11rem;
   --value-w: 2.25rem;
+  --delta-w: 2.75rem;
+  /* Name, bar, value, and the gain over one-click likes. */
+  --rules-cols: var(--name-w) minmax(0, 1fr) var(--value-w) var(--delta-w);
   display: grid;
   gap: 10px;
   min-width: 0;
@@ -455,7 +458,7 @@
 }
 .rules-guess {
   display: grid;
-  grid-template-columns: var(--name-w) minmax(0, 1fr) var(--value-w);
+  grid-template-columns: var(--rules-cols);
   column-gap: 10px;
   margin: 0 0 2px;
 }
@@ -475,7 +478,7 @@
 .rules-bar {
   appearance: none;
   display: grid;
-  grid-template-columns: var(--name-w) minmax(0, 1fr) var(--value-w);
+  grid-template-columns: var(--rules-cols);
   column-gap: 10px;
   align-items: center;
   width: 100%;
@@ -555,6 +558,43 @@
 }
 .rules-bar:focus-visible {
   outline-offset: 2px;
+}
+/* The gain over one-click likes, the rules most networks use. The best rule's bar is gold. */
+.rules-vs,
+.rules-delta {
+  width: var(--delta-w);
+  font-family: var(--mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.04em;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  color: var(--ink-label);
+}
+.rules-vs {
+  width: auto;
+  margin: 0 0 0 auto;
+  white-space: nowrap;
+}
+.rules-delta.is-base {
+  text-transform: uppercase;
+}
+.rules-bars .rules-bar.is-best .rules-fill {
+  background: var(--gold);
+  box-shadow: inset 0 0 0 1px var(--gold-edge);
+}
+.rules-bar.is-best .rules-name,
+.rules-bar.is-best .rules-delta {
+  color: var(--ink);
+  font-weight: 500;
+}
+@media (max-width: 599.98px) {
+  .rules-chart {
+    --rules-cols: var(--name-w) minmax(0, 1fr) var(--value-w);
+  }
+  .rules-delta,
+  .rules-vs {
+    display: none;
+  }
 }
 .rules-note {
   margin: 0;
