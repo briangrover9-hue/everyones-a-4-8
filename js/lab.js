@@ -1068,8 +1068,8 @@ function mount(root, panel) {
 
   /* ---------- How this works ---------- */
 
-  // Three plain steps above the lab. They start folded to one line everywhere, since scene 4's
-  // intro and the chart's key already say the same; the title opens and closes them.
+  // Three plain steps above the lab. Beside the text they start open; on a phone, where both
+  // charts need the room, they start folded to one line. The title opens and closes them.
   const how = document.getElementById('lab-how');
   const howTitle = how && how.querySelector('.lab-how-title');
   const howBody = how && how.querySelector('.lab-how-body');
@@ -1085,7 +1085,8 @@ function mount(root, panel) {
     howToggle = howTitle.firstElementChild;
     howToggle.addEventListener('click', () => setHow(how.classList.contains('is-closed')));
   }
-  setHow(false);
+  // A short laptop window starts with them folded too, so the column fits beside the charts.
+  setHow(wide.matches && window.innerHeight > 800);
   // Beside the charts, the steps sit in scene 4's text column under its intro, so the charts
   // get the full height; on a phone they sit at the top of the lab.
   const labBeat = document.querySelector('.beat[data-beat="lab"]');
