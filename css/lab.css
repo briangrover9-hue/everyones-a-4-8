@@ -606,9 +606,14 @@
   .lab {
     gap: 8px;
   }
-  /* One line per chart: its name, then its numbers. */
+  /* One line per chart: its name, then its numbers. Tighter spacing keeps each label from
+     wrapping a line early in Safari, whose type sets a little wider. */
   .lab-row-head {
     flex-wrap: nowrap;
+    gap: 2px 10px;
+  }
+  .lab-row-head .label {
+    letter-spacing: 0;
   }
   .lab-row-wide {
     display: none;
@@ -686,6 +691,13 @@
   }
   .rules {
     gap: 8px;
+  }
+}
+/* Shorter phones: scene 5's answer line steps down a size so the caveat and its button fit. */
+@media (max-width: 959.98px) and (max-height: 760px) {
+  html.stage-on .scene-lab[data-beat="compare"]:not(.is-tuning) .lab-result {
+    font-size: 0.9375rem;
+    line-height: 1.35;
   }
 }
 /* A phone too short for the steps and a readable chart keeps scene 4's intro, which says the
