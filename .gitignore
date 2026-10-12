@@ -1,0 +1,10 @@
+# Brian's private notes live outside the repo; this guards against a copy landing here
+sources-private/
+
+.DS_Store
+node_modules/
+.env
+.env.*
+
+# Raw data downloads (see research/airbnb_measure.py)
+.cache/

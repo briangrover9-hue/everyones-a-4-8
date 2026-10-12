@@ -1,0 +1,529 @@
+/* Charts: the guess and the drift grids on the stage, the paired bars and the dot plot on the
+   methods page. Class prefixes: ch (shared), gs (guess), dr (drift), wn (why now), va (validity).
+   The stage's charts size themselves from their scene's visual area (.scene-visual, a size
+   container), so each one fills the room its scene gives it. */
+
+/* Shared */
+.ch-svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+.ch-svg text {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  fill: var(--ink);
+}
+.ch-axis,
+.ch-tick {
+  stroke: var(--ink-label);
+  stroke-width: 1;
+}
+.ch-svg .ch-tick-label {
+  fill: var(--ink-label);
+}
+.ch-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 22px;
+  margin: 0 0 16px;
+}
+.ch-key {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+/* A chart that has gone out of view empties at once, without its transitions, so it can
+   fill again when the reader comes back. */
+.is-resetting,
+.is-resetting * {
+  transition: none !important;
+}
+.fallback {
+  color: var(--ink-body);
+}
+
+/* ---------- 1. The guess ---------- */
+
+.guess {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  height: 100%;
+  max-height: 660px;
+  margin: 0;
+}
+@media (min-width: 960px) {
+  .guess {
+    margin-block: auto;
+    height: min(100%, 660px);
+    position: relative;
+    top: 50%;
+    translate: 0 -50%;
+  }
+}
+.guess-root {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-height: 0;
+}
+.guess-root [hidden] {
+  display: none !important;
+}
+.gs {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-height: 0;
+}
+/* The plot: the big number up top, and after the reveal, the bars rising from the track. */
+.gs-plot {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 120px;
+}
+/* The big number sits just over the track, next to the star it follows. */
+.gs-number {
+  position: absolute;
+  bottom: 36px;
+  left: 0;
+  z-index: 1;
+  font-size: clamp(3.25rem, min(23cqw, 26cqh), 10.25rem);
+}
+.gs-number-label {
+  margin: 0 0 0.5rem;
+  font-size: 0.75rem;
+}
+/* The serif role, large: a big number. */
+.gs-num {
+  margin: 0;
+  /* At this line height the digits rise above their box; the padding gives that back, so the
+     label over the number keeps its gap. */
+  padding-top: 0.1em;
+  font-family: var(--serif);
+  font-size: 1em;
+  font-weight: 400;
+  line-height: 0.84;
+  letter-spacing: -0.035em;
+  font-variant-numeric: lining-nums tabular-nums;
+  font-variation-settings: "opsz" 72;
+  color: var(--ink);
+}
+.gs-stars {
+  width: 1.86em;
+  height: auto;
+  margin-top: 0.12em;
+}
+.gs-hist {
+  position: absolute;
+  inset: 0;
+}
+.gs-hist svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.gs-band {
+  fill: var(--ink-wash);
+}
+.gs-bars {
+  fill: var(--ink);
+  transform-box: view-box;
+  transition: transform var(--move) var(--ease);
+}
+.gs-median {
+  stroke: var(--ink);
+  stroke-width: 1;
+  stroke-dasharray: 2 3;
+}
+.ch-svg .gs-median-label {
+  font-weight: 500;
+}
+.ch-svg .gs-band-label {
+  fill: var(--ink-label);
+}
+.gs-anno {
+  transition: opacity var(--fade) var(--ease) 200ms;
+}
+.is-pending .gs-bars {
+  transform: scaleY(0);
+}
+.is-pending .gs-anno {
+  opacity: 0;
+}
+
+/* The slider: its track is the chart's axis, so it tucks up under the bars. */
+.gs-slider {
+  position: relative;
+  z-index: 2;
+  margin-top: -22px;
+  -webkit-user-select: none;
+  user-select: none;
+}
+.gs-range {
+  -webkit-appearance: none;
+  appearance: none;
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 100%;
+  height: 44px;
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  cursor: pointer;
+  touch-action: none;
+}
+.gs-range:disabled {
+  cursor: default;
+}
+.gs-range::-webkit-slider-runnable-track {
+  height: 2px;
+  background: var(--ink);
+  border: 0;
+}
+.gs-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 36px;
+  height: 36px;
+  margin-top: -17px;
+  border: 0;
+  background: transparent center / 100% 100% no-repeat;
+  transition: transform var(--press) var(--ease);
+}
+.gs-range:not(:disabled):active::-webkit-slider-thumb {
+  transform: scale(1.12);
+}
+.gs-range::-moz-range-track {
+  height: 2px;
+  background: var(--ink);
+  border: 0;
+}
+.gs-range::-moz-range-thumb {
+  width: 36px;
+  height: 36px;
+  border: 0;
+  border-radius: 0;
+  background: transparent center / 100% 100% no-repeat;
+  transition: transform var(--press) var(--ease);
+}
+.gs-range:not(:disabled):active::-moz-range-thumb {
+  transform: scale(1.12);
+}
+.gs-range:focus {
+  outline: none;
+}
+.gs-range:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+}
+@supports selector(:has(*)) {
+  .gs-range:focus-visible {
+    outline: none;
+  }
+  .gs-slider:has(.gs-range:focus-visible) {
+    outline: 2px solid var(--ink);
+    outline-offset: 4px;
+  }
+}
+/* Touch screens: only the star takes a touch, so a swipe that starts on the track still moves
+   between scenes, and the star gets a 44px square to grab while it is drawn at 36px. */
+@media (pointer: coarse) {
+  .gs-range {
+    width: calc(100% + 8px);
+    margin: 0 -4px;
+    pointer-events: none;
+  }
+  .gs-range::-webkit-slider-runnable-track {
+    background: linear-gradient(var(--ink), var(--ink)) center / calc(100% - 8px) 100% no-repeat;
+  }
+  .gs-range::-webkit-slider-thumb {
+    box-sizing: border-box;
+    width: 44px;
+    height: 44px;
+    margin-top: -21px;
+    border: 4px solid transparent;
+    background-origin: content-box;
+    background-clip: content-box;
+    pointer-events: auto;
+  }
+  .gs-range::-moz-range-track {
+    background: linear-gradient(var(--ink), var(--ink)) center / calc(100% - 8px) 100% no-repeat;
+  }
+  .gs-range::-moz-range-thumb {
+    box-sizing: border-box;
+    width: 44px;
+    height: 44px;
+    border: 4px solid transparent;
+    background-origin: content-box;
+    background-clip: content-box;
+    pointer-events: auto;
+  }
+}
+/* Tick labels sit under the thumb's center at 1 to 5, inset by half a thumb. */
+.gs-ticks {
+  position: relative;
+  height: 22px;
+  margin: -12px 18px 0;
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  line-height: 1;
+  color: var(--ink-label);
+}
+.gs-ticks span {
+  position: absolute;
+  top: 10px;
+  transform: translateX(-50%);
+}
+.gs-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 16px;
+  margin-top: 8px;
+}
+.gs-hint {
+  flex: 1 1 12rem;
+  min-width: 0;
+}
+.guess-cap {
+  flex: none;
+  margin: 0;
+  max-width: 44rem;
+  font-size: 0.6875rem;
+}
+/* Each source link gets a 32px tall target without moving the line; it reaches up more than
+   down, so it stays clear of the counter below. */
+.guess-cap a {
+  display: inline-block;
+  padding-block: 12px 4px;
+  margin-block: -12px -4px;
+}
+
+/* ---------- 2. The drift ---------- */
+
+.dr-sprite {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+.drift {
+  display: grid;
+  height: 100%;
+  place-items: center;
+}
+/* Four grids, two by two. charts.js sets --dr-n to the biggest size that fits; this first
+   guess holds until it does. */
+.dr-list {
+  --dr-gap: 12px;
+  --dr-n: min(calc((100cqw - 2 * var(--dr-gap)) / 3), calc((100cqh - 200px) / 2.4), 300px);
+  /* A column is never narrower than its labels need, even when the grid in it is small. */
+  --dr-col: max(var(--dr-n), min(10.5rem, calc((100cqw - 2 * var(--dr-gap)) / 3)));
+  display: grid;
+  grid-template-columns: repeat(3, var(--dr-col));
+  justify-content: center;
+  align-content: center;
+  gap: 14px var(--dr-gap);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.dr-item {
+  display: grid;
+  align-content: start;
+  width: var(--dr-col);
+  min-width: 0;
+}
+/* The shortest screens keep each grid's number and name, and drop the note under them. */
+@container (max-height: 330px) {
+  .dr-note {
+    display: none;
+  }
+}
+.dr-stars {
+  width: var(--dr-n);
+  height: var(--dr-n);
+}
+.dr-num {
+  margin: 8px 0 2px;
+  font-family: var(--serif);
+  font-size: max(1.375rem, calc(var(--dr-n) * 0.19));
+  font-weight: 400;
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+  font-variant-numeric: lining-nums;
+  font-variation-settings: "opsz" 60;
+  color: var(--ink);
+}
+.dr-name {
+  color: var(--ink);
+}
+.dr-name,
+.dr-note {
+  font-size: 0.6875rem;
+  line-height: 1.45;
+}
+.dr-name a {
+  display: inline-block;
+  padding-block: 12px;
+  margin-block: -12px;
+  color: var(--ink);
+}
+/* Every star gets the gold edge; empty ones are hollow. */
+.dr-stars use {
+  stroke: var(--gold-edge);
+  stroke-width: 1;
+  stroke-linejoin: round;
+  transition: fill var(--move) var(--ease) var(--d, 0ms);
+}
+.dr-s0 {
+  fill: var(--paper);
+}
+.dr-s1 {
+  fill: var(--gold);
+}
+.dr-s2 {
+  fill: var(--gold-light);
+}
+.dr-stars.is-pending .dr-s1,
+.dr-stars.is-pending .dr-s2 {
+  fill: var(--paper);
+}
+.dr-stars.is-settled use {
+  transition: none;
+}
+@media (min-width: 960px) {
+  .dr-list {
+    --dr-gap: 36px;
+    gap: 28px var(--dr-gap);
+  }
+  .dr-name,
+  .dr-note {
+    font-size: 0.75rem;
+  }
+}
+
+/* ---------- 3. Why now (methods page) ---------- */
+
+.wn-swatch {
+  display: inline-block;
+  flex: none;
+  width: 18px;
+  height: 12px;
+}
+.wn-swatch-before {
+  border: 1.5px solid var(--ink);
+  background: var(--paper);
+}
+.wn-swatch-after {
+  background: var(--ink);
+}
+.ch-svg .wn-label {
+  font-family: var(--serif);
+  font-weight: 500;
+  letter-spacing: 0;
+}
+.ch-svg .wn-note {
+  font-size: 13px;
+  font-weight: 500;
+}
+.ch-svg .wn-value {
+  font-size: 13px;
+  transition: opacity var(--fade) var(--ease) 250ms;
+}
+.wn-before {
+  fill: var(--paper);
+  stroke: var(--ink);
+  stroke-width: 1.5;
+  vector-effect: non-scaling-stroke;
+}
+.wn-after {
+  fill: var(--ink);
+}
+.wn-bar {
+  transform-box: fill-box;
+  transform-origin: 0 50%;
+  transition: transform var(--move) var(--ease);
+}
+.is-pending .wn-bar {
+  transform: scaleX(0);
+}
+.ch-svg.is-pending .wn-value {
+  opacity: 0;
+}
+
+/* ---------- 4. What predicts the job (methods page) ---------- */
+
+.ch-svg .va-label {
+  font-family: var(--serif);
+  font-size: 16px;
+  letter-spacing: 0;
+}
+.ch-svg .va-label.is-strong {
+  font-weight: 600;
+}
+.ch-svg .va-value {
+  fill: var(--ink-body);
+}
+.ch-svg .va-sub {
+  fill: var(--ink-label);
+}
+.va-grid {
+  stroke: var(--ink-rule);
+  stroke-width: 1;
+}
+.va-line {
+  stroke: var(--ink-label);
+  stroke-width: 1.5;
+}
+.va-1998 {
+  fill: var(--paper);
+  stroke: var(--ink);
+  stroke-width: 1.5;
+}
+.va-2022 {
+  fill: var(--ink);
+}
+.va-key {
+  display: block;
+  flex: none;
+}
+
+/* Forced colors repaint backgrounds, which would erase the slider's track; outlines survive. */
+@media (forced-colors: active) {
+  .gs-range::-webkit-slider-runnable-track {
+    outline: 1px solid;
+  }
+  .gs-range::-moz-range-track {
+    outline: 1px solid;
+  }
+}
+
+/* Reduced motion: bars fade in instead of growing, the grids start full (charts.js skips the
+   fill), and nothing scales under a press. */
+@media (prefers-reduced-motion: reduce) {
+  .wn-bar,
+  .dr-stars use,
+  .ch-svg .wn-value {
+    transition: none;
+  }
+  .gs-bars,
+  .gs-anno {
+    transition: opacity var(--fade) var(--ease);
+  }
+  .is-pending .gs-bars {
+    transform: none;
+    opacity: 0;
+  }
+  .gs-range:not(:disabled):active::-webkit-slider-thumb,
+  .gs-range:not(:disabled):active::-moz-range-thumb {
+    transform: none;
+  }
+}

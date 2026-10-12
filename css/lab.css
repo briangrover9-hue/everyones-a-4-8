@@ -1,0 +1,1141 @@
+/* The trust lab, shared by scenes 4 and 5: two big numbers, a one-line key, the field with its
+   round under it and, while "Try other rules" is open, a line on the last rule changed. The lab
+   fills its scene's visual area; the field takes whatever height is left.
+
+   "Try other rules" is a frosted panel over the scene's text: beside the chart from 960px, and
+   across the top on phones, where the chart moves down under it. Either way the chart stays in
+   full view while its switches change. */
+
+.lab {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  height: 100%;
+  min-height: 0;
+}
+@media (min-width: 960px) {
+  /* Beside the text, the lab sits in the middle of its space, the field's spare room split
+     above and below it. */
+  .lab {
+    position: absolute;
+    inset: 0;
+    justify-content: center;
+    height: min(100%, 750px);
+    margin: auto 0;
+    gap: 14px;
+  }
+}
+
+/* How this works: three plain steps above the lab, so the reader knows what the dots and stars
+   are before reading any result. Beside the text they sit in a row and stay open. On a phone
+   they stack, and fold to one line once the first run of scene 4 has played (js/lab.js); the
+   title then opens them again. */
+.lab-how {
+  flex: none;
+  container-type: inline-size;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--ink-rule);
+}
+.lab-how-title {
+  margin: 0 0 8px;
+  color: var(--ink);
+}
+.lab-how-toggle {
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  min-height: 32px;
+  margin: 0 0 -6px;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  color: inherit;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+.lab-how-toggle::after {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-right: 1.25px solid currentColor;
+  border-bottom: 1.25px solid currentColor;
+  transform: translateY(1px) rotate(-135deg);
+  transition: transform var(--press) var(--ease);
+}
+.lab-how.is-closed .lab-how-toggle::after {
+  transform: translateY(-2px) rotate(45deg);
+}
+.lab-how-body {
+  display: grid;
+  grid-template-rows: 1fr;
+  transition:
+    grid-template-rows var(--move) var(--ease),
+    opacity var(--fade) var(--ease),
+    visibility 0s linear 0s;
+}
+.lab-how.is-closed {
+  padding-bottom: 6px;
+}
+.lab-how.is-closed .lab-how-title {
+  margin-bottom: 0;
+}
+.lab-how.is-closed .lab-how-body {
+  grid-template-rows: 0fr;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    grid-template-rows var(--move) var(--ease),
+    opacity var(--press) var(--ease),
+    visibility 0s linear var(--move);
+}
+.lab-how-steps {
+  display: grid;
+  gap: 6px;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  list-style: none;
+}
+@container (min-width: 620px) {
+  .lab-how-steps {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 20px;
+  }
+}
+.lab-how-steps li {
+  display: grid;
+  grid-template-columns: 32px minmax(0, 1fr);
+  column-gap: 10px;
+  align-items: start;
+  font-size: 0.875rem;
+  line-height: 1.38;
+  color: var(--ink-body);
+}
+.lab-how-icon {
+  width: 32px;
+  height: 20px;
+  overflow: visible;
+}
+.lab-how-icon .is-hollow {
+  fill: var(--paper);
+  stroke: var(--ink-label);
+  stroke-width: 1;
+}
+.lab-how-icon .is-filled {
+  fill: var(--ink);
+}
+.lab-how-icon .is-line {
+  fill: none;
+  stroke: var(--ink-label);
+  stroke-width: 1;
+  stroke-linecap: round;
+}
+.lab-how-icon .is-star {
+  fill: var(--gold);
+  stroke: var(--gold-edge);
+  stroke-width: 1;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+/* Beside the charts the steps sit in the text column, where they read at body size, smaller on
+   a short screen so the column still fits. */
+@media (min-width: 960px) {
+  .beat .lab-how-steps {
+    gap: 14px;
+  }
+  .beat .lab-how-steps li {
+    grid-template-columns: 44px minmax(0, 1fr);
+    column-gap: 14px;
+    font-size: clamp(0.9375rem, 2.1vh, 1.1875rem);
+    line-height: 1.45;
+  }
+  .beat .lab-how-icon {
+    width: 44px;
+    height: 28px;
+  }
+}
+/* Scene 4's verdict: once both charts have run, what they found, in the text column beside
+   them. Its room is held from the start, so nothing moves when it arrives. */
+.lab-verdict {
+  display: none;
+}
+@media (min-width: 960px) {
+  html.stage-on .lab-verdict {
+    display: grid;
+    min-height: calc(1.3em * 3);
+    margin: 0;
+    font-family: var(--serif);
+    font-size: clamp(1.125rem, 2.6vh, 1.5rem);
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+  }
+  html.stage-on .scene-lab[data-beat="lab"] .lab-result {
+    display: none;
+  }
+  /* Replay is then the last thing beside the text; its tap area stays clear of the counter. */
+  html.stage-on .scene-lab[data-beat="lab"] .lab-foot {
+    margin-bottom: 12px;
+  }
+}
+/* A gold star on one of the best, drawn as in the field. */
+.lab-how-icon .is-hit {
+  stroke: var(--ink);
+  stroke-width: 1.5;
+}
+
+/* Two charts on one shared axis: one-click likes above, the rules being run below. Each row
+   has its name and its two numbers over its field, so the contrast reads at a glance. */
+.lab-row {
+  display: flex;
+  flex: 1 1 0;
+  flex-direction: column;
+  gap: 2px;
+  min-height: 0;
+}
+.lab-row-head {
+  display: flex;
+  flex: none;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 2px 16px;
+  margin: 0;
+}
+.lab-row-name {
+  color: var(--ink);
+}
+.lab-row-stats {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+}
+/* The serif role, large: the count of the best people found. */
+.lab-row-num {
+  min-width: 1ch;
+  font-family: var(--serif);
+  font-size: clamp(1.625rem, 1.2rem + 1.2vw, 2.375rem);
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  font-variant-numeric: lining-nums tabular-nums;
+  font-variation-settings: "opsz" 60;
+  color: var(--ink);
+}
+.lab-row-second {
+  margin-left: 8px;
+}
+
+/* The key: black dots and gold stars. */
+.lab-legend {
+  display: flex;
+  flex: none;
+  flex-wrap: wrap;
+  gap: 2px 18px;
+  margin: 0;
+}
+.lab-legend-item {
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+}
+.lab-key {
+  display: inline-block;
+  flex: none;
+  width: 1.1em;
+  height: 1.1em;
+  margin-right: 0.45em;
+  overflow: visible;
+}
+.lab-key circle {
+  fill: var(--paper);
+  stroke: var(--ink-label);
+  stroke-width: 1;
+}
+.lab-key.is-filled circle {
+  fill: var(--ink);
+  stroke: var(--ink);
+}
+.lab-key path {
+  fill: var(--gold);
+  stroke: var(--gold-edge);
+  stroke-width: 1;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+
+/* The field paints on its own layer, so a browser redrawing the frosted panel beside it never
+   drops the dots. */
+.lab-field-wrap {
+  transform: translateZ(0);
+}
+
+/* The field takes what is left. */
+/* A field much taller than its tallest stack would leave the dots at the bottom of an empty
+   box, so it stops growing at 380px; a phone's lab then sits under its text with the spare
+   room below. */
+.lab-field-wrap {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 72px;
+  max-height: 300px;
+}
+.lab-field {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  -webkit-user-select: none;
+  user-select: none;
+}
+.lab-band {
+  fill: var(--ink-wash);
+}
+.lab-axis,
+.lab-tick {
+  stroke: var(--ink);
+  stroke-width: 1;
+}
+/* The rule separates people with no score from people scored 1, so it needs 3:1. */
+.lab-lane-rule {
+  stroke: var(--ink-label);
+  stroke-width: 1;
+}
+.lab-label,
+.lab-tick-label {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  fill: var(--ink-label);
+}
+
+/* People: hollow dots, filled for the 10 most skilled, gold stars for the top 10 by score */
+.lab-p circle {
+  fill: var(--paper);
+  stroke: var(--ink-label);
+  stroke-width: 1;
+}
+.lab-p.is-skilled circle {
+  fill: var(--ink);
+  stroke: var(--ink);
+}
+.lab-star {
+  display: none;
+  fill: var(--gold);
+  stroke: var(--gold-edge);
+  stroke-width: 1;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+.lab-p.is-skilled .lab-star {
+  stroke: var(--ink);
+  stroke-width: 1.75;
+}
+.lab-p.is-top circle {
+  display: none;
+}
+.lab-p.is-top .lab-star {
+  display: inline;
+}
+
+.lab-foot {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 16px;
+}
+.lab-round {
+  margin: 0;
+  font-variant-numeric: tabular-nums;
+}
+.lab-replay {
+  padding-block: 12px;
+  margin-block: -12px;
+}
+
+/* Under the charts: in scene 4 what the two runs found, in scene 5 what the tapped rules find
+   and what they cost. */
+.lab-result {
+  flex: none;
+  min-height: calc(1.42em * 2);
+  max-width: 36rem;
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.42;
+  color: var(--ink-body);
+}
+.is-tuning .lab-result {
+  display: none;
+}
+
+/* The line on the last rule changed, under the field while "Try other rules" is open. */
+.lab-explain {
+  display: none;
+  flex: none;
+  min-height: calc(1.42em * 2);
+  max-width: 36rem;
+  font-size: 1rem;
+  line-height: 1.42;
+  color: var(--ink-body);
+}
+.is-tuning .lab-explain {
+  display: grid;
+}
+
+/* ---------- Scene 5: which rules find the best people? ---------- */
+
+/* One bar per set of rules: its name, its average against a 0 to 10 track with a dashed line
+   where guessing lands, and the number. The pressed bar is the one the lab is running. */
+.rules {
+  --name-w: 11rem;
+  --value-w: 2.25rem;
+  display: grid;
+  gap: 10px;
+  min-width: 0;
+}
+.rules-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 16px;
+}
+.rules-title {
+  margin: 0;
+  color: var(--ink);
+}
+.rules-pills {
+  display: inline-flex;
+  border: 1px solid var(--ink);
+}
+.rules-pill {
+  appearance: none;
+  min-height: 36px;
+  margin: 0;
+  padding: 0 12px;
+  border: 0;
+  background: none;
+  font-family: var(--mono);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--ink);
+  cursor: pointer;
+  touch-action: manipulation;
+  transition:
+    background-color var(--press) var(--ease),
+    color var(--press) var(--ease);
+}
+.rules-pill + .rules-pill {
+  border-left: 1px solid var(--ink);
+}
+.rules-pill[aria-pressed="true"] {
+  background: var(--ink);
+  color: var(--paper);
+}
+@media (hover: hover) and (pointer: fine) {
+  .rules-pill[aria-pressed="false"]:hover {
+    background: var(--ink-wash);
+  }
+}
+.rules-pill:focus-visible {
+  position: relative;
+  outline-offset: 2px;
+}
+.rules-chart {
+  min-width: 0;
+}
+.rules-guess {
+  display: grid;
+  grid-template-columns: var(--name-w) minmax(0, 1fr) var(--value-w);
+  column-gap: 10px;
+  margin: 0 0 2px;
+}
+.rules-guess span {
+  grid-column: 2;
+  justify-self: start;
+  margin-left: calc(var(--guess) * 100%);
+  translate: -50% 0;
+}
+.rules-bars {
+  display: grid;
+  gap: 2px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.rules-bar {
+  appearance: none;
+  display: grid;
+  grid-template-columns: var(--name-w) minmax(0, 1fr) var(--value-w);
+  column-gap: 10px;
+  align-items: center;
+  width: 100%;
+  min-height: 34px;
+  margin: 0;
+  padding: 3px 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  text-align: left;
+  color: inherit;
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: transform var(--press) var(--ease);
+}
+.rules-bar:active {
+  transform: scale(0.99);
+}
+.rules-name {
+  font-family: var(--mono);
+  font-size: 0.6875rem;
+  line-height: 1.3;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--ink-label);
+  transition: color var(--press) var(--ease);
+}
+.rules-track {
+  position: relative;
+  height: 12px;
+  background: var(--ink-wash);
+}
+/* Where guessing lands: about 1 of the 10 best. */
+.rules-track::after {
+  content: "";
+  position: absolute;
+  top: -5px;
+  bottom: -5px;
+  left: calc(var(--guess) * 100%);
+  border-left: 1px dashed var(--ink-label);
+}
+.rules-fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: calc(var(--v) * 100%);
+  background: rgb(var(--ink-rgb) / 0.34);
+  transform-origin: left center;
+  transition:
+    transform var(--move) var(--ease),
+    background-color var(--press) var(--ease);
+}
+.rules-bars.is-pending .rules-fill {
+  transform: scaleX(0);
+  transition: none;
+}
+.rules-value {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  color: var(--ink);
+}
+.rules-bar[aria-pressed="true"] .rules-fill {
+  background: var(--ink);
+}
+.rules-bar[aria-pressed="true"] .rules-name {
+  color: var(--ink);
+  font-weight: 500;
+}
+@media (hover: hover) and (pointer: fine) {
+  .rules-bar[aria-pressed="false"]:hover .rules-fill {
+    background: rgb(var(--ink-rgb) / 0.56);
+  }
+  .rules-bar:hover .rules-name {
+    color: var(--ink);
+  }
+}
+.rules-bar:focus-visible {
+  outline-offset: 2px;
+}
+.rules-note {
+  margin: 0;
+}
+/* The bars are the model's output: the line under them says so in plain words. */
+.rules-caveat {
+  margin: 0;
+  font-size: 0.9375rem;
+  line-height: 1.42;
+  color: var(--ink-body);
+}
+/* Its "Try other rules" gets a taller touch area without moving the lines around it. */
+.rules-caveat .text-button {
+  display: inline-block;
+  padding-block: 4px;
+  margin-block: -4px;
+}
+.is-tuning .rules {
+  display: none;
+}
+
+/* Phones and narrow tablets. Every screen fits without scrolling inside it. Scene 4 gives the
+   room to the two charts: its headline says what they show, so its intro makes way, and the
+   round and replay with it. Scene 5 puts the bars first, then both counts, the line on what the
+   tapped rules find and cost, and the caveat; the dots were on screen in scene 4. */
+@media (max-width: 959.98px) {
+  .rules {
+    --name-w: 9rem;
+  }
+  html.stage-on .scene-lab:not([data-beat="compare"]) .scene-visual > .rules {
+    display: none;
+  }
+  html.stage-on .scene-lab[data-beat="compare"] .lab-how,
+  .scene-lab.is-tuning .lab-how {
+    display: none;
+  }
+  /* The lab's text column takes only the beat on screen. */
+  html.stage-on .scene-lab .scene-text {
+    position: relative;
+  }
+  html.stage-on .scene-lab .beat:not(.is-current) {
+    position: absolute;
+    inset: 0 0 auto;
+  }
+  html.stage-on .scene-lab[data-beat="lab"] #lab-body,
+  html.stage-on .scene-lab[data-beat="lab"]:not(.is-tuning) .lab-foot {
+    display: none;
+  }
+  .lab {
+    gap: 8px;
+  }
+  /* One line per chart: its name, then its numbers. */
+  .lab-row-head {
+    flex-wrap: nowrap;
+  }
+  .lab-row-wide {
+    display: none;
+  }
+  .lab-row-num {
+    font-size: 1.5rem;
+  }
+  .lab-row-second {
+    margin-left: 4px;
+  }
+  .lab-legend {
+    gap: 2px 12px;
+    letter-spacing: 0.02em;
+  }
+  .lab-how {
+    padding-bottom: 8px;
+  }
+  .lab-how-steps {
+    gap: 5px;
+  }
+  html.stage-on .scene-lab[data-beat="compare"]:not(.is-tuning) .scene-visual {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  html.stage-on .scene-lab[data-beat="compare"] #compare-note,
+  html.stage-on .scene-lab[data-beat="compare"] .beat-links {
+    display: none;
+  }
+  /* The rules box and the lab open up so their parts share one column, in reading order. */
+  html.stage-on .scene-lab[data-beat="compare"]:not(.is-tuning) .scene-visual > .rules,
+  html.stage-on .scene-lab[data-beat="compare"]:not(.is-tuning) .lab {
+    display: contents;
+  }
+  html.stage-on .scene-lab[data-beat="compare"]:not(.is-tuning) .rules-head {
+    order: 1;
+  }
+  html.stage-on .scene-lab[data-beat="compare"]:not(.is-tuning) .rules-chart {
+    order: 2;
+  }
+  html.stage-on .scene-lab[data-beat="compare"]:not(.is-tuning) .lab-row {
+    order: 3;
+    flex: none;
+  }
+  html.stage-on .scene-lab[data-beat="compare"]:not(.is-tuning) .lab-result {
+    order: 4;
+  }
+  html.stage-on .scene-lab[data-beat="compare"]:not(.is-tuning) .rules-caveat {
+    order: 5;
+  }
+  html.stage-on .scene-lab[data-beat="compare"]:not(.is-tuning) .rules-bar {
+    min-height: 26px;
+    padding-block: 2px;
+  }
+  html.stage-on .scene-lab[data-beat="compare"]:not(.is-tuning) .rules-chart .rules-bars {
+    gap: 0;
+  }
+  html.stage-on .scene-lab[data-beat="compare"]:not(.is-tuning) .rules-note,
+  html.stage-on .scene-lab[data-beat="compare"]:not(.is-tuning) .lab-row[data-row="base"],
+  html.stage-on .scene-lab[data-beat="compare"]:not(.is-tuning) .lab-legend,
+  html.stage-on .scene-lab[data-beat="compare"]:not(.is-tuning) .lab-field-wrap,
+  html.stage-on .scene-lab[data-beat="compare"]:not(.is-tuning) .lab-foot {
+    display: none;
+  }
+  /* Under the rules panel there is room for one chart: the one the switches change. */
+  .scene-lab.is-tuning .lab-row[data-row="base"] {
+    display: none;
+  }
+}
+/* Short laptop windows: scene 5's bars sit a little closer so the column fits. */
+@media (min-width: 960px) and (max-height: 800px) {
+  .rules-bar {
+    min-height: 28px;
+    padding-block: 1px;
+  }
+  .rules {
+    gap: 8px;
+  }
+}
+/* A phone too short for the steps and a readable chart keeps scene 4's intro, which says the
+   same in a sentence, and the steps give way. */
+@media (max-width: 959.98px) and (max-height: 599.98px) {
+  html.stage-on .lab-how {
+    display: none;
+  }
+  /* The smallest phones: scene 5 tightens so the bars, the answer and the caveat still fit. */
+  html.stage-on .scene-lab[data-beat="compare"] #h-compare {
+    font-size: 1.75rem;
+  }
+  html.stage-on .scene-lab[data-beat="compare"]:not(.is-tuning) .rules-guess {
+    display: none;
+  }
+  html.stage-on .scene-lab[data-beat="compare"]:not(.is-tuning) .rules-bar {
+    min-height: 22px;
+    padding-block: 1px;
+  }
+  html.stage-on .scene-lab[data-beat="compare"]:not(.is-tuning) .scene-visual {
+    gap: 8px;
+  }
+  html.stage-on .scene-lab[data-beat="compare"]:not(.is-tuning) .lab-result,
+  html.stage-on .scene-lab[data-beat="compare"]:not(.is-tuning) .rules-caveat {
+    font-size: 0.875rem;
+    line-height: 1.35;
+  }
+  /* The answer line already gives this run's own count. */
+  html.stage-on .scene-lab[data-beat="compare"]:not(.is-tuning) .lab-row[data-row="main"] {
+    display: none;
+  }
+}
+
+/* ---------- "Try other rules" ---------- */
+
+:root {
+  --panel-h: min(44vh, 440px);
+}
+@supports (height: 1dvh) {
+  :root {
+    --panel-h: min(44dvh, 440px);
+  }
+}
+@media (max-height: 620px) {
+  :root {
+    --panel-h: 38vh;
+  }
+  @supports (height: 1dvh) {
+    :root {
+      --panel-h: 38dvh;
+    }
+  }
+  .lab-field-wrap {
+    min-height: 96px;
+  }
+}
+.lab-panel {
+  position: fixed;
+  z-index: 35;
+  top: var(--frame-top);
+  left: 8px;
+  right: 8px;
+  height: var(--panel-h);
+  display: flex;
+  flex-direction: column;
+  /* Nearly opaque paper, so the scene's words under the panel never show through its controls.
+     The frost is only a thin rim: the panel blurs what is behind it lightly, and paper covers
+     all but its outer 6px (the ::before below). */
+  background: rgb(243 238 227 / 0.8);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  border: 1px solid var(--ink-rule-strong);
+  box-shadow: 0 18px 48px rgb(var(--ink-rgb) / 0.1);
+  opacity: 0;
+  transform: translateY(-14px);
+  transition:
+    opacity var(--move) var(--ease),
+    transform var(--move) var(--ease);
+}
+.lab-panel::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 6px;
+  background: rgb(243 238 227 / 0.97);
+  pointer-events: none;
+}
+.lab-panel:focus {
+  outline: none;
+}
+.lab-panel[hidden] {
+  display: none;
+}
+.lab-panel.is-open {
+  opacity: 1;
+  transform: none;
+}
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .lab-panel {
+    background: rgb(243 238 227 / 0.94);
+  }
+}
+@media (min-width: 960px) {
+  .lab-panel {
+    top: calc(var(--frame-top) + 4px);
+    bottom: calc(var(--frame-bottom) + 4px);
+    left: calc(max(var(--gutter), (100vw - 1640px) / 2) - 24px);
+    right: auto;
+    width: calc(var(--text-col) + var(--col-gap) / 2 + 24px);
+    height: auto;
+    transform: translateX(-14px);
+  }
+}
+.lab-panel-head {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  min-height: 48px;
+  padding: 0 16px;
+  border-bottom: 1px solid var(--ink-rule);
+}
+.lab-panel-title {
+  margin: 0;
+  color: var(--ink);
+}
+.lab-panel-close {
+  padding-block: 12px;
+}
+.lab-panel-body {
+  flex: 1 1 auto;
+  display: grid;
+  align-content: start;
+  gap: 20px;
+  min-height: 0;
+  padding: 16px 16px 24px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-y pinch-zoom;
+}
+.lab-panel-lede,
+.lab-note,
+.lab-anchor-note {
+  margin: 0;
+  font-size: 0.9375rem;
+  line-height: 1.45;
+  color: var(--ink-body);
+}
+.lab-anchor-note {
+  font-size: 0.875rem;
+}
+
+/* The scene under the panel: its text dims behind the frost and takes no clicks. */
+.scene-lab .scene-text {
+  transition: opacity var(--fade) var(--ease);
+}
+.scene-lab.is-tuning .scene-text {
+  opacity: 0.28;
+  pointer-events: none;
+}
+/* Phones: the panel spans the top, so the chart moves down to start under it, without its key,
+   and the counter makes way. */
+@media (max-width: 959.98px) {
+  html.stage-on .scene-lab.is-tuning .scene-text {
+    flex: 0 0 calc(var(--panel-h) - 2px);
+    overflow: hidden;
+  }
+  html.stage-on .scene-lab.is-tuning {
+    padding-bottom: 12px;
+  }
+  .scene-lab.is-tuning .lab-legend {
+    display: none;
+  }
+  html.is-tuning .frame-bottom {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+.frame-bottom {
+  transition:
+    opacity var(--fade) var(--ease),
+    visibility 0s linear 0s;
+}
+
+/* Presets: two quiet buttons, the one that matches the switches marked as pressed */
+.lab-preset-row {
+  clear: both;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.lab-preset[aria-pressed="true"] {
+  border-color: var(--ink);
+  background: var(--ink-wash);
+}
+
+/* Switches: native radios drawn as segmented controls */
+.lab-switches {
+  display: grid;
+  gap: 16px;
+}
+.lab-switch {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+.lab-switch legend {
+  float: left;
+  width: 100%;
+  margin: 0 0 6px;
+  padding: 0;
+}
+/* "A vouch is" and the anchor slider under it move as one piece. */
+.lab-switch-group {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 8px;
+  min-width: 0;
+}
+.lab-slider[hidden] {
+  display: none;
+}
+.lab-seg {
+  clear: both;
+  display: flex;
+  border: 1px solid var(--ink);
+}
+.lab-seg label {
+  position: relative;
+  display: flex;
+  flex: 1 1 0;
+  min-width: 0;
+}
+.lab-seg label + label {
+  border-left: 1px solid var(--ink);
+}
+.lab-seg input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+.lab-seg span {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 6px;
+  font-family: var(--mono);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  line-height: 1.25;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  text-align: center;
+  color: var(--ink);
+  pointer-events: none;
+  transition:
+    background-color var(--press) var(--ease),
+    color var(--press) var(--ease),
+    transform var(--press) var(--ease);
+}
+/* Press feedback for a pointer press on an option that will change something. */
+.lab-seg input:not(:checked):active:not(:focus-visible) + span {
+  transform: scale(0.97);
+}
+@media (hover: hover) and (pointer: fine) {
+  .lab-seg input:not(:checked):hover + span {
+    background: var(--ink-wash);
+  }
+}
+.lab-seg input:checked + span {
+  background: var(--ink);
+  color: var(--paper);
+}
+.lab-seg input:focus-visible + span {
+  position: relative;
+  z-index: 1;
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+}
+
+/* Our assumptions */
+.lab-drawer-body {
+  display: grid;
+  gap: 18px;
+  padding-top: 18px;
+  border-top: 1px solid var(--ink-rule);
+}
+.lab-drawer-title {
+  margin: 0;
+}
+.lab-slider label {
+  display: block;
+  font-size: 0.9375rem;
+  line-height: 1.4;
+  color: var(--ink);
+}
+.lab-slider-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  column-gap: 14px;
+  -webkit-user-select: none;
+  user-select: none;
+}
+/* The value sits above its track, where a finger on the thumb cannot cover it. */
+.lab-slider-value {
+  order: -1;
+  width: 100%;
+  font-variant-numeric: tabular-nums;
+}
+.lab-slider input[type="range"] {
+  flex: 1 1 100%;
+  min-width: 0;
+  height: 44px;
+  margin: 0;
+  background: transparent;
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+}
+.lab-slider input[type="range"]::-webkit-slider-runnable-track {
+  height: 2px;
+  background: var(--ink-label);
+}
+.lab-slider input[type="range"]::-webkit-slider-thumb {
+  width: 14px;
+  height: 26px;
+  margin-top: -12px;
+  border: 0;
+  border-radius: 0;
+  background: var(--ink);
+  -webkit-appearance: none;
+  appearance: none;
+}
+.lab-slider input[type="range"]::-moz-range-track {
+  height: 2px;
+  background: var(--ink-label);
+}
+.lab-slider input[type="range"]::-moz-range-thumb {
+  width: 14px;
+  height: 26px;
+  border: 0;
+  border-radius: 0;
+  background: var(--ink);
+}
+.lab-drawer-body .btn {
+  justify-self: start;
+}
+
+/* Touch: only the thumb takes a touch, so a scroll that starts on a track cannot change an
+   assumption, and the thumb gets a 44px square to grab while the bar is still drawn 14 by 26. */
+.lab-seg label,
+.lab-panel .btn {
+  touch-action: manipulation;
+}
+@media (pointer: coarse) {
+  .lab-slider input[type="range"] {
+    margin: 0 -15px;
+    pointer-events: none;
+  }
+  .lab-slider input[type="range"]::-webkit-slider-runnable-track {
+    background: linear-gradient(var(--ink-label), var(--ink-label)) center / calc(100% - 30px) 100% no-repeat;
+  }
+  .lab-slider input[type="range"]::-webkit-slider-thumb {
+    box-sizing: border-box;
+    width: 44px;
+    height: 44px;
+    margin-top: -21px;
+    border: solid transparent;
+    border-width: 9px 15px;
+    background-clip: content-box;
+    pointer-events: auto;
+  }
+  .lab-slider input[type="range"]::-moz-range-track {
+    background: linear-gradient(var(--ink-label), var(--ink-label)) center / calc(100% - 30px) 100% no-repeat;
+  }
+  .lab-slider input[type="range"]::-moz-range-thumb {
+    box-sizing: border-box;
+    width: 44px;
+    height: 44px;
+    border: solid transparent;
+    border-width: 9px 15px;
+    background-clip: content-box;
+    pointer-events: auto;
+  }
+}
+
+/* Forced colors paint every background alike, which hides the chosen option and the sliders,
+   so mark the choice with system colors and draw the sliders with outlines. */
+@media (forced-colors: active) {
+  .lab-preset[aria-pressed="true"] {
+    forced-color-adjust: none;
+    border-color: Highlight;
+    background: Highlight;
+    color: HighlightText;
+  }
+  .lab-seg input:checked + span {
+    forced-color-adjust: none;
+    background: Highlight;
+    color: HighlightText;
+    outline-color: CanvasText;
+  }
+  .lab-slider input[type="range"]::-webkit-slider-runnable-track,
+  .lab-slider input[type="range"]::-webkit-slider-thumb {
+    outline: 1px solid;
+  }
+  .lab-slider input[type="range"]::-moz-range-track,
+  .lab-slider input[type="range"]::-moz-range-thumb {
+    outline: 1px solid;
+  }
+}
+
+/* Reduced motion: the panel fades in without sliding, and a press dims a segment instead of
+   shrinking it. The dots jump and fade (lab.js). */
+@media (prefers-reduced-motion: reduce) {
+  .lab-how-body,
+  .lab-how.is-closed .lab-how-body {
+    transition:
+      opacity var(--fade) var(--ease),
+      visibility 0s linear var(--fade);
+  }
+  .rules-bars.is-pending .rules-fill,
+  .rules-fill {
+    transform: none;
+  }
+  .rules-bar:active {
+    transform: none;
+  }
+  .lab-panel,
+  .lab-panel.is-open {
+    transform: none;
+    transition: opacity var(--move) var(--ease);
+  }
+  .lab-seg input:not(:checked):active:not(:focus-visible) + span {
+    transform: none;
+    opacity: 0.8;
+  }
+}
+
+.lab-panel-body {
+  scrollbar-width: thin;
+  scrollbar-color: var(--ink-rule) transparent;
+  mask-image: linear-gradient(to bottom, #000 calc(100% - 28px), rgba(0, 0, 0, 0.15));
+}

@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Everyone’s a 4.8</title>
+  <meta name="description" content="AI writes the resumes and AI reads them, so hiring runs on who vouches for you. Why trust signals drift to the top, and what keeps a vouch worth something.">
+  <link rel="canonical" href="https://briangrover9-hue.github.io/everyones-a-4-8/">
+  <meta name="author" content="Brian Grover">
+  <meta name="robots" content="noindex">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Everyone’s a 4.8">
+  <meta property="og:description" content="AI writes the resumes and AI reads them, so hiring runs on who vouches for you. Why trust signals drift to the top, and what keeps a vouch worth something.">
+  <meta property="og:url" content="https://briangrover9-hue.github.io/everyones-a-4-8/">
+  <meta property="og:image" content="https://briangrover9-hue.github.io/everyones-a-4-8/assets/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="A large 4.8 with five gold stars, the last one mostly filled, and the title Everyone’s a 4.8.">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:creator" content="@briantgrover">
+  <meta name="twitter:title" content="Everyone’s a 4.8">
+  <meta name="twitter:description" content="AI writes the resumes and AI reads them, so hiring runs on who vouches for you. Why trust signals drift to the top, and what keeps a vouch worth something.">
+  <meta name="twitter:image" content="https://briangrover9-hue.github.io/everyones-a-4-8/assets/og.png">
+  <meta name="theme-color" content="#f3eee3">
+  <link rel="icon" href="assets/star.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+  <script>
+    // Full-screen scenes need a screen at least 500px tall. The class goes on before the first
+    // paint, so the stage never flashes as a long page; js/stage.js keeps it in step after that.
+    document.documentElement.classList.add('js');
+    if (window.matchMedia('(min-height: 500px)').matches) document.documentElement.classList.add('stage-on');
+  </script>
+  <script nomodule>document.documentElement.classList.remove('js', 'stage-on');</script>
+  <link rel="preload" href="fonts/Newsreader-normal-300-700.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="fonts/IBMPlexMono-normal-500.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="css/style.css?v=9">
+  <link rel="stylesheet" href="css/stage.css?v=9">
+  <link rel="stylesheet" href="css/charts.css?v=9">
+  <link rel="stylesheet" href="css/lab.css?v=9">
+  <script type="module" src="js/stage.js?v=9"></script>
+  <script type="module" src="js/charts.js?v=9"></script>
+  <script type="module" src="js/lab.js?v=9"></script>
+  <link rel="modulepreload" href="js/motion.js">
+  <link rel="modulepreload" href="js/stars.js">
+  <link rel="modulepreload" href="js/lab-model.js">
+  <script>
+    // Start the chart data while the page parses; js/charts.js picks these up. A preload
+    // would do the same in Chromium and Firefox, but WebKit never matches a fetch preload
+    // and downloads the file twice.
+    // Each file is read once here and shared, parsed, with the charts and the lab.
+    const get = (path) => fetch(path).then((res) => {
+      if (!res.ok) throw new Error(`${path} returned HTTP ${res.status}`);
+      return res.json();
+    });
+    window.chartData = { figures: get('data/figures.json'), airbnb: get('data/airbnb.json') };
+    Object.values(window.chartData).forEach((request) => request.catch(() => {})); // each chart reports its own failure
+  </script>
+</head>
+<body class="page-stage">
+  <div class="grain" aria-hidden="true"></div>
+
+  <header class="frame-top">
+    <p class="frame-title"><a href="#start" data-go="0">Everyone’s a&nbsp;4.8</a></p>
+    <p class="page-rating" id="page-rating">
+      <span class="visually-hidden" id="rating-said">This page’s own rating starts at 3.0 and climbs with each scene.</span>
+      <span class="page-rating-label label" aria-hidden="true">This page</span>
+      <svg class="stars" viewBox="0 0 76 14" aria-hidden="true" focusable="false"><g transform="translate(0 0) scale(0.5833333333333334)"><path class="star-empty" d="M12 1.8l3.05 6.52 7.13.86-5.26 4.9 1.38 7.05L12 17.6l-6.3 3.53 1.38-7.05L1.82 9.18l7.13-.86z"/><clipPath id="hdr-clip-1"><rect data-star="0" width="24.00" height="24"/></clipPath><path class="star-fill" d="M12 1.8l3.05 6.52 7.13.86-5.26 4.9 1.38 7.05L12 17.6l-6.3 3.53 1.38-7.05L1.82 9.18l7.13-.86z" clip-path="url(#hdr-clip-1)"/><path class="star-edge" d="M12 1.8l3.05 6.52 7.13.86-5.26 4.9 1.38 7.05L12 17.6l-6.3 3.53 1.38-7.05L1.82 9.18l7.13-.86z" vector-effect="non-scaling-stroke"/></g><g transform="translate(15.5 0) scale(0.5833333333333334)"><path class="star-empty" d="M12 1.8l3.05 6.52 7.13.86-5.26 4.9 1.38 7.05L12 17.6l-6.3 3.53 1.38-7.05L1.82 9.18l7.13-.86z"/><clipPath id="hdr-clip-2"><rect data-star="1" width="24.00" height="24"/></clipPath><path class="star-fill" d="M12 1.8l3.05 6.52 7.13.86-5.26 4.9 1.38 7.05L12 17.6l-6.3 3.53 1.38-7.05L1.82 9.18l7.13-.86z" clip-path="url(#hdr-clip-2)"/><path class="star-edge" d="M12 1.8l3.05 6.52 7.13.86-5.26 4.9 1.38 7.05L12 17.6l-6.3 3.53 1.38-7.05L1.82 9.18l7.13-.86z" vector-effect="non-scaling-stroke"/></g><g transform="translate(31 0) scale(0.5833333333333334)"><path class="star-empty" d="M12 1.8l3.05 6.52 7.13.86-5.26 4.9 1.38 7.05L12 17.6l-6.3 3.53 1.38-7.05L1.82 9.18l7.13-.86z"/><clipPath id="hdr-clip-3"><rect data-star="2" width="24.00" height="24"/></clipPath><path class="star-fill" d="M12 1.8l3.05 6.52 7.13.86-5.26 4.9 1.38 7.05L12 17.6l-6.3 3.53 1.38-7.05L1.82 9.18l7.13-.86z" clip-path="url(#hdr-clip-3)"/><path class="star-edge" d="M12 1.8l3.05 6.52 7.13.86-5.26 4.9 1.38 7.05L12 17.6l-6.3 3.53 1.38-7.05L1.82 9.18l7.13-.86z" vector-effect="non-scaling-stroke"/></g><g transform="translate(46.5 0) scale(0.5833333333333334)"><path class="star-empty" d="M12 1.8l3.05 6.52 7.13.86-5.26 4.9 1.38 7.05L12 17.6l-6.3 3.53 1.38-7.05L1.82 9.18l7.13-.86z"/><clipPath id="hdr-clip-4"><rect data-star="3" width="0.00" height="24"/></clipPath><path class="star-fill" d="M12 1.8l3.05 6.52 7.13.86-5.26 4.9 1.38 7.05L12 17.6l-6.3 3.53 1.38-7.05L1.82 9.18l7.13-.86z" clip-path="url(#hdr-clip-4)"/><path class="star-edge" d="M12 1.8l3.05 6.52 7.13.86-5.26 4.9 1.38 7.05L12 17.6l-6.3 3.53 1.38-7.05L1.82 9.18l7.13-.86z" vector-effect="non-scaling-stroke"/></g><g transform="translate(62 0) scale(0.5833333333333334)"><path class="star-empty" d="M12 1.8l3.05 6.52 7.13.86-5.26 4.9 1.38 7.05L12 17.6l-6.3 3.53 1.38-7.05L1.82 9.18l7.13-.86z"/><clipPath id="hdr-clip-5"><rect data-star="4" width="0.00" height="24"/></clipPath><path class="star-fill" d="M12 1.8l3.05 6.52 7.13.86-5.26 4.9 1.38 7.05L12 17.6l-6.3 3.53 1.38-7.05L1.82 9.18l7.13-.86z" clip-path="url(#hdr-clip-5)"/><path class="star-edge" d="M12 1.8l3.05 6.52 7.13.86-5.26 4.9 1.38 7.05L12 17.6l-6.3 3.53 1.38-7.05L1.82 9.18l7.13-.86z" vector-effect="non-scaling-stroke"/></g></svg>
+      <span class="page-rating-num" aria-hidden="true">3.0</span>
+    </p>
+  </header>
+
+  <main id="main" class="stage">
+    <!-- Scene 1: the opening -->
+    <section class="scene scene-open is-current" id="start" data-section="0" aria-labelledby="title">
+      <div class="scene-text">
+        <h1 class="scene-title scene-title-big" id="title" tabindex="-1" data-words>Everyone’s a 4.8</h1>
+        <p class="scene-body" data-rise>We’ll happily tell a restaurant its fries were soggy. Rate a person, a host, a driver, a coworker, and almost everyone gets a 4.8. Now AI writes the resumes and AI reads them, so hiring leans on the ratings we’re worst at&nbsp;giving.</p>
+        <p class="byline label" data-rise>By <a href="https://www.linkedin.com/in/briantgrover">Brian Grover</a> <span aria-hidden="true">·</span> <a href="https://x.com/briantgrover">@briantgrover</a> <span aria-hidden="true">·</span> <a href="methods.html#methods">Methods and sources</a></p>
+      </div>
+      <div class="scene-visual" data-rise>
+        <div class="big-rating" aria-hidden="true">
+          <p class="big-rating-num">4.8</p>
+          <svg class="big-rating-stars" viewBox="0 0 264 48" role="img" aria-label="4.8 out of 5 stars"><g transform="translate(0 0) scale(2)"><path class="star-empty" d="M12 1.8l3.05 6.52 7.13.86-5.26 4.9 1.38 7.05L12 17.6l-6.3 3.53 1.38-7.05L1.82 9.18l7.13-.86z"/><clipPath id="open-clip-1"><rect data-star="0" width="24.00" height="24"/></clipPath><path class="star-fill" d="M12 1.8l3.05 6.52 7.13.86-5.26 4.9 1.38 7.05L12 17.6l-6.3 3.53 1.38-7.05L1.82 9.18l7.13-.86z" clip-path="url(#open-clip-1)"/><path class="star-edge" d="M12 1.8l3.05 6.52 7.13.86-5.26 4.9 1.38 7.05L12 17.6l-6.3 3.53 1.38-7.05L1.82 9.18l7.13-.86z" vector-effect="non-scaling-stroke"/></g><g transform="translate(54 0) scale(2)"><path class="star-empty" d="M12 1.8l3.05 6.52 7.13.86-5.26 4.9 1.38 7.05L12 17.6l-6.3 3.53 1.38-7.05L1.82 9.18l7.13-.86z"/><clipPath id="open-clip-2"><rect data-star="1" width="24.00" height="24"/></clipPath><path class="star-fill" d="M12 1.8l3.05 6.52 7.13.86-5.26 4.9 1.38 7.05L12 17.6l-6.3 3.53 1.38-7.05L1.82 9.18l7.13-.86z" clip-path="url(#open-clip-2)"/><path class="star-edge" d="M12 1.8l3.05 6.52 7.13.86-5.26 4.9 1.38 7.05L12 17.6l-6.3 3.53 1.38-7.05L1.82 9.18l7.13-.86z" vector-effect="non-scaling-stroke"/></g><g transform="translate(108 0) scale(2)"><path class="star-empty" d="M12 1.8l3.05 6.52 7.13.86-5.26 4.9 1.38 7.05L12 17.6l-6.3 3.53 1.38-7.05L1.82 9.18l7.13-.86z"/><clipPath id="open-clip-3"><rect data-star="2" width="24.00" height="24"/></clipPath><path class="star-fill" d="M12 1.8l3.05 6.52 7.13.86-5.26 4.9 1.38 7.05L12 17.6l-6.3 3.53 1.38-7.05L1.82 9.18l7.13-.86z" clip-path="url(#open-clip-3)"/><path class="star-edge" d="M12 1.8l3.05 6.52 7.13.86-5.26 4.9 1.38 7.05L12 17.6l-6.3 3.53 1.38-7.05L1.82 9.18l7.13-.86z" vector-effect="non-scaling-stroke"/></g><g transform="translate(162 0) scale(2)"><path class="star-empty" d="M12 1.8l3.05 6.52 7.13.86-5.26 4.9 1.38 7.05L12 17.6l-6.3 3.53 1.38-7.05L1.82 9.18l7.13-.86z"/><clipPath id="open-clip-4"><rect data-star="3" width="24.00" height="24"/></clipPath><path class="star-fill" d="M12 1.8l3.05 6.52 7.13.86-5.26 4.9 1.38 7.05L12 17.6l-6.3 3.53 1.38-7.05L1.82 9.18l7.13-.86z" clip-path="url(#open-clip-4)"/><path class="star-edge" d="M12 1.8l3.05 6.52 7.13.86-5.26 4.9 1.38 7.05L12 17.6l-6.3 3.53 1.38-7.05L1.82 9.18l7.13-.86z" vector-effect="non-scaling-stroke"/></g><g transform="translate(216 0) scale(2)"><path class="star-empty" d="M12 1.8l3.05 6.52 7.13.86-5.26 4.9 1.38 7.05L12 17.6l-6.3 3.53 1.38-7.05L1.82 9.18l7.13-.86z"/><clipPath id="open-clip-5"><rect data-star="4" width="19.20" height="24"/></clipPath><path class="star-fill" d="M12 1.8l3.05 6.52 7.13.86-5.26 4.9 1.38 7.05L12 17.6l-6.3 3.53 1.38-7.05L1.82 9.18l7.13-.86z" clip-path="url(#open-clip-5)"/><path class="star-edge" d="M12 1.8l3.05 6.52 7.13.86-5.26 4.9 1.38 7.05L12 17.6l-6.3 3.53 1.38-7.05L1.82 9.18l7.13-.86z" vector-effect="non-scaling-stroke"/></g></svg>
+        </div>
+      </div>
+    </section>
+
+    <!-- Scene 2: the guess -->
+    <section class="scene" id="guess" data-section="1" aria-labelledby="h-guess">
+      <div class="scene-text">
+        <h2 class="scene-title" id="h-guess" tabindex="-1" data-words>Booking an Airbnb? Guess the typical rating.</h2>
+        <p class="scene-body line" id="guess-body" data-rise>Think of a place with at least 10 reviews, rated out of 5, and drag the star to your&nbsp;guess.</p>
+      </div>
+      <div class="scene-visual" data-rise>
+        <figure class="guess" id="fig-guess" aria-labelledby="h-guess" aria-describedby="guess-cap">
+          <div id="guess-root" class="guess-root">
+            <p class="fallback">The typical Airbnb listing in San Francisco and New York with at least 10 reviews is rated 4.84 out of 5. Half of these places are rated 4.84 or higher, and fewer than 1 in 100 falls below 4.</p>
+          </div>
+          <figcaption class="label guess-cap" id="guess-cap">Places with 10+ reviews, San Francisco and New York, June&nbsp;2026 <span aria-hidden="true">·</span> <a href="https://insideairbnb.com/get-the-data/">Inside&nbsp;Airbnb</a> <span aria-hidden="true">·</span> <a href="https://github.com/briangrover9-hue/everyones-a-4-8/blob/main/research/airbnb_measure.py">Our&nbsp;code</a></figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- Scene 3: we go easy on people -->
+    <section class="scene" id="everywhere" data-section="2" aria-labelledby="h-drift">
+      <div class="scene-text">
+        <h2 class="scene-title" id="h-drift" tabindex="-1" data-words>We go easy on people</h2>
+        <p class="scene-body" data-rise>Grades, eBay sellers, Airbnb hosts: when a person is on the other end, the scores crowd the top. Food gets no mercy: 1 in 5 Yelp ratings was one star, and a third of packaged foods average under 4&nbsp;stars.</p>
+        <p class="label drift-key scene-links" data-rise>Each grid is 100 stars. Gold is the share at the top of each scale. Hotels, rated as businesses, spread out. <a href="methods.html#m-drift">All sources</a> <span aria-hidden="true">·</span> <button type="button" class="text-button why-button" aria-controls="why-drift" aria-expanded="false">Why?</button></p>
+      </div>
+      <aside class="why-card" id="why-drift" aria-labelledby="why-drift-title" tabindex="-1">
+        <div class="why-card-head"><p class="label why-card-title" id="why-drift-title">Why ratings drift</p><button type="button" class="text-button label" data-why-close>Close</button></div>
+        <p>Praise is free: an endorsement takes <a href="https://web.archive.org/web/20120926031752/http://blog.linkedin.com:80/2012/09/24/introducing-endorsements-give-kudos-with-just-one-click/">one click</a>. People see what you said, so a low score invites one back; when Airbnb hid reviews until both sides had written one, the link between guest and host ratings <a href="https://andreyfradkin.com/assets/reviews_paper.pdf">fell by about half</a>. Unhappy people stay quiet: on eBay, fewer than 1 in 100 comments was negative, though one estimate puts unhappy buyers at <a href="https://www.cs.princeton.edu/courses/archive/spr08/cos444/papers/dellarocas_wood06.pdf">about 1 in&nbsp;5</a>. And people go easier on people: hotels, which can’t rate guests back, drift far less, and the <a href="https://internet.psych.wisc.edu/wp-content/uploads/532-Master/532-UnitPages/Unit-10/Zervas_2015.pdf">researchers suggest</a> people rate “other individuals differently or more tactfully, than they rate&nbsp;firms.”</p>
+      </aside>
+      <div class="scene-visual" data-rise>
+        <div id="drift-root" class="drift" aria-label="How much of each scale sits at the top">
+          <ul class="fallback">
+            <li>Harvard grades that are A’s: 24 percent in 2005, 60.2 percent in 2025.</li>
+            <li>eBay feedback that is positive, for the average seller: 99.3 percent.</li>
+            <li>LinkedIn endorsements and GitHub stars can only say yes: 100 percent.</li>
+            <li>Airbnb listings rated 4.5 or higher in 2015: 94 percent. TripAdvisor hotels: 26 percent.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Scenes 4 and 5 share the lab: 4 plays the worst rules, 5 flips one switch. -->
+    <section class="scene scene-lab" id="lab" data-section="3" data-beat="lab" aria-label="The lab">
+      <div class="scene-text">
+        <div class="beat" data-beat="lab">
+          <h2 class="scene-title" id="h-lab" tabindex="-1" data-words>One-click likes miss half the best people. Real work and vetted vouches find&nbsp;them.</h2>
+          <p class="scene-body" id="lab-body" data-rise>The same 80 simulated coworkers, rated two ways at once. On top, one-click likes. Below, every vouch has to point at real work, and counts more when it comes from someone whose past calls held&nbsp;up.</p>
+          <p class="lab-verdict line" id="lab-verdict" aria-hidden="true"></p>
+          <p class="label scene-links" data-rise><button type="button" class="text-button why-button" aria-controls="why-lab" aria-expanded="false">Why?</button></p>
+        </div>
+        <div class="beat" data-beat="compare" id="compare">
+          <h2 class="scene-title" id="h-compare" tabindex="-1" data-words>Which rules find the best people?</h2>
+          <p class="scene-body" id="compare-note" data-rise>Shortlist the top 10 of these 80 people. How many of the 10 truly best make it? Each bar is the average across 12 simulated companies. Tap one to run&nbsp;it.</p>
+          <div class="rules" id="rules" data-rise aria-labelledby="rules-title">
+            <p class="fallback">This chart needs JavaScript. In our simulation, of the 10 most skilled people, the top 10 by score finds about 8 with real work and vetted vouches, about 6 when praise is tied to real work, about 5 with written reviews, hidden reviews or saying how you know someone, about 5 with one-click likes, and about 2 with LinkedIn-style endorsements. Guessing finds about 1. These are simulated, not measured.</p>
+          </div>
+          <p class="beat-links label scene-links" data-rise>
+            <button type="button" class="text-button" id="rules-open" aria-controls="lab-panel" aria-expanded="false">Try other rules</button>
+          </p>
+        </div>
+      </div>
+      <aside class="why-card" id="why-lab" aria-labelledby="why-lab-title" tabindex="-1">
+        <div class="why-card-head"><p class="label why-card-title" id="why-lab-title">How the lab works</p><button type="button" class="text-button label" data-why-close>Close</button></div>
+        <p>It’s a simulation written for this page: 80 coworkers, each with a hidden skill level, rate each other for 30 rounds. Half the ratings go to people they worked with and half to whoever a feed shows, and the feed favors whoever has the most. Each one-tap rating is judged against the current average, plus a little, so with nothing fixed to judge against, the scores climb.</p>
+        <p>A vouch that points at real work can be checked against the work, so it says more about skill than about who is well known. Hiring research finds the same thing: a work sample, where a candidate does a piece of the real job, predicts job performance better than years of experience do (<a href="https://doi.org/10.1037/apl0000994">Sackett and colleagues, 2022</a>). In the lab, how firmly real work anchors a rating is our assumption, and “Try other rules” lets you change&nbsp;it.</p>
+        <p class="label why-card-src">Every rule and number: <a href="methods.html#m-lab">methods</a> <span aria-hidden="true">·</span> <a href="https://github.com/briangrover9-hue/everyones-a-4-8/blob/main/js/lab-model.js">the&nbsp;code</a></p>
+      </aside>
+      <div class="scene-visual" data-rise>
+        <div id="lab-root" class="lab" data-seed="374">
+          <div class="lab-how" id="lab-how">
+            <p class="label lab-how-title">How this works</p>
+            <div class="lab-how-body" id="lab-how-body">
+              <ol class="lab-how-steps">
+                <li><svg class="lab-how-icon" viewBox="0 0 32 20" aria-hidden="true" focusable="false"><circle class="is-hollow" cx="5" cy="5.5" r="3.2"/><circle class="is-filled" cx="16" cy="5.5" r="3.2"/><circle class="is-hollow" cx="27" cy="5.5" r="3.2"/><circle class="is-hollow" cx="10.5" cy="14.5" r="3.2"/><circle class="is-filled" cx="21.5" cy="14.5" r="3.2"/></svg><span>80 pretend coworkers. Each one is secretly good or not so good at their job.</span></li>
+                <li><svg class="lab-how-icon" viewBox="0 0 32 20" aria-hidden="true" focusable="false"><circle class="is-hollow" cx="4.5" cy="10" r="3.2"/><circle class="is-hollow" cx="27.5" cy="10" r="3.2"/><path class="is-star" d="M12 1.8l3.05 6.52 7.13.86-5.26 4.9 1.38 7.05L12 17.6l-6.3 3.53 1.38-7.05L1.82 9.18l7.13-.86z" transform="translate(9 3) scale(.5833)"/></svg><span>Every round, they rate each other. Some ratings are honest, some are just being nice.</span></li>
+                <li><svg class="lab-how-icon" viewBox="0 0 32 20" aria-hidden="true" focusable="false"><circle class="is-filled" cx="5.5" cy="10" r="3.2"/><path class="is-line" d="M11 8.4h5.5M11 11.6h5.5"/><path class="is-star is-hit" d="M12 1.8l3.05 6.52 7.13.86-5.26 4.9 1.38 7.05L12 17.6l-6.3 3.53 1.38-7.05L1.82 9.18l7.13-.86z" transform="translate(19.5 3) scale(.5833)"/></svg><span>We check: do the highest-rated people turn out to be the best ones? Black dots are the best. Gold stars are the highest rated.</span></li>
+              </ol>
+            </div>
+          </div>
+          <p class="fallback">This lab needs JavaScript. In the simulation, with one-click ratings that everyone can see, the scores drift up toward 5, and the top 10 by score holds only about half of the 10 most skilled people. When every rating points at real work, the scores stay spread out, and the top 10 holds most of them.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Scene 6: what this means for hiring -->
+    <section class="scene scene-close" id="hiring" data-section="4" aria-labelledby="h-hiring">
+      <div class="scene-text">
+        <h2 class="scene-title" id="h-hiring" tabindex="-1" data-words>What this means for hiring</h2>
+        <p class="scene-body" data-rise>We’re good at judging things and bad at judging each other. On one freelance site, 28% of employers who privately said they’d never rehire a worker still gave that worker 4 stars or more in&nbsp;public.</p>
+        <p class="scene-body" data-rise>A resume written by AI is the hiring version of a one-click like. So lean on signals that are hard to fake: a piece of real work, references asked about specific work they saw, and more weight on people whose past calls held&nbsp;up.</p>
+        <p class="label scene-links" data-rise><button type="button" class="text-button why-button" aria-controls="why-hiring" aria-expanded="false">Why?</button></p>
+        <p class="byline label" data-rise>By <a href="https://www.linkedin.com/in/briantgrover">Brian Grover</a> <span aria-hidden="true">·</span> <a href="https://x.com/briantgrover">@briantgrover</a> <span aria-hidden="true">·</span> <a href="methods.html#methods">Methods and sources</a></p>
+      </div>
+      <aside class="why-card" id="why-hiring" aria-labelledby="why-hiring-title" tabindex="-1">
+        <div class="why-card-head"><p class="label why-card-title" id="why-hiring-title">What the research says</p><button type="button" class="text-button label" data-why-close>Close</button></div>
+        <p>On a large freelance marketplace, 28.4% of employers who privately said they would definitely not hire a worker again gave that worker 4 or more stars in public, and the reverse almost never happened (<a href="https://www.nber.org/papers/w25857">Filippas, Horton and Golden</a>). A work sample, where a candidate does a piece of the real job, predicts job performance better than years of experience do (<a href="https://doi.org/10.1037/apl0000994">Sackett and colleagues, 2022</a>). Reviews written before either side sees the other’s cut the link between the two sides’ ratings <a href="https://andreyfradkin.com/assets/reviews_paper.pdf">by about half</a>. Signals that cost something keep their meaning: when people could send only a few, each one counted for <a href="https://web.stanford.edu/~niederle/Lee.Niederle.Rose.ExpEcon.2015.pdf">more</a>. Every source is in the <a href="methods.html#m-why">notes</a>.</p>
+      </aside>
+      <div class="scene-visual" data-rise>
+        <div class="big-rating">
+          <p class="big-rating-num" aria-hidden="true">5.0</p>
+          <svg class="big-rating-stars" viewBox="0 0 264 48" role="img" aria-label="5.0 out of 5 stars"><g transform="translate(0 0) scale(2)"><path class="star-empty" d="M12 1.8l3.05 6.52 7.13.86-5.26 4.9 1.38 7.05L12 17.6l-6.3 3.53 1.38-7.05L1.82 9.18l7.13-.86z"/><clipPath id="close-clip-1"><rect data-star="0" width="24.00" height="24"/></clipPath><path class="star-fill" d="M12 1.8l3.05 6.52 7.13.86-5.26 4.9 1.38 7.05L12 17.6l-6.3 3.53 1.38-7.05L1.82 9.18l7.13-.86z" clip-path="url(#close-clip-1)"/><path class="star-edge" d="M12 1.8l3.05 6.52 7.13.86-5.26 4.9 1.38 7.05L12 17.6l-6.3 3.53 1.38-7.05L1.82 9.18l7.13-.86z" vector-effect="non-scaling-stroke"/></g><g transform="translate(54 0) scale(2)"><path class="star-empty" d="M12 1.8l3.05 6.52 7.13.86-5.26 4.9 1.38 7.05L12 17.6l-6.3 3.53 1.38-7.05L1.82 9.18l7.13-.86z"/><clipPath id="close-clip-2"><rect data-star="1" width="24.00" height="24"/></clipPath><path class="star-fill" d="M12 1.8l3.05 6.52 7.13.86-5.26 4.9 1.38 7.05L12 17.6l-6.3 3.53 1.38-7.05L1.82 9.18l7.13-.86z" clip-path="url(#close-clip-2)"/><path class="star-edge" d="M12 1.8l3.05 6.52 7.13.86-5.26 4.9 1.38 7.05L12 17.6l-6.3 3.53 1.38-7.05L1.82 9.18l7.13-.86z" vector-effect="non-scaling-stroke"/></g><g transform="translate(108 0) scale(2)"><path class="star-empty" d="M12 1.8l3.05 6.52 7.13.86-5.26 4.9 1.38 7.05L12 17.6l-6.3 3.53 1.38-7.05L1.82 9.18l7.13-.86z"/><clipPath id="close-clip-3"><rect data-star="2" width="24.00" height="24"/></clipPath><path class="star-fill" d="M12 1.8l3.05 6.52 7.13.86-5.26 4.9 1.38 7.05L12 17.6l-6.3 3.53 1.38-7.05L1.82 9.18l7.13-.86z" clip-path="url(#close-clip-3)"/><path class="star-edge" d="M12 1.8l3.05 6.52 7.13.86-5.26 4.9 1.38 7.05L12 17.6l-6.3 3.53 1.38-7.05L1.82 9.18l7.13-.86z" vector-effect="non-scaling-stroke"/></g><g transform="translate(162 0) scale(2)"><path class="star-empty" d="M12 1.8l3.05 6.52 7.13.86-5.26 4.9 1.38 7.05L12 17.6l-6.3 3.53 1.38-7.05L1.82 9.18l7.13-.86z"/><clipPath id="close-clip-4"><rect data-star="3" width="24.00" height="24"/></clipPath><path class="star-fill" d="M12 1.8l3.05 6.52 7.13.86-5.26 4.9 1.38 7.05L12 17.6l-6.3 3.53 1.38-7.05L1.82 9.18l7.13-.86z" clip-path="url(#close-clip-4)"/><path class="star-edge" d="M12 1.8l3.05 6.52 7.13.86-5.26 4.9 1.38 7.05L12 17.6l-6.3 3.53 1.38-7.05L1.82 9.18l7.13-.86z" vector-effect="non-scaling-stroke"/></g><g transform="translate(216 0) scale(2)"><path class="star-empty" d="M12 1.8l3.05 6.52 7.13.86-5.26 4.9 1.38 7.05L12 17.6l-6.3 3.53 1.38-7.05L1.82 9.18l7.13-.86z"/><clipPath id="close-clip-5"><rect data-star="4" width="24.00" height="24"/></clipPath><path class="star-fill" d="M12 1.8l3.05 6.52 7.13.86-5.26 4.9 1.38 7.05L12 17.6l-6.3 3.53 1.38-7.05L1.82 9.18l7.13-.86z" clip-path="url(#close-clip-5)"/><path class="star-edge" d="M12 1.8l3.05 6.52 7.13.86-5.26 4.9 1.38 7.05L12 17.6l-6.3 3.53 1.38-7.05L1.82 9.18l7.13-.86z" vector-effect="non-scaling-stroke"/></g></svg>
+          <p class="big-rating-cap label">You read to the end. This page is now a 5.0, like everything else.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <aside class="lab-panel" id="lab-panel" aria-labelledby="lab-panel-title" hidden></aside>
+
+  <nav class="frame-bottom" aria-label="Scenes">
+    <p class="frame-count label" aria-hidden="true"><span class="frame-now">01</span> / 06</p>
+    <ol class="frame-dots" role="list">
+      <li><button type="button" data-go="0" aria-label="Scene 1 of 6: Everyone’s a 4.8" aria-current="step"></button></li>
+      <li><button type="button" data-go="1" aria-label="Scene 2 of 6: the Airbnb guess"></button></li>
+      <li><button type="button" data-go="2" aria-label="Scene 3 of 6: we go easy on people"></button></li>
+      <li><button type="button" data-go="3" aria-label="Scene 4 of 6: one-click likes against real work and vetted vouches"></button></li>
+      <li><button type="button" data-go="4" aria-label="Scene 5 of 6: which rules find the best people"></button></li>
+      <li><button type="button" data-go="5" aria-label="Scene 6 of 6: what this means for hiring"></button></li>
+    </ol>
+    <button type="button" class="frame-cue label" data-go="1" aria-label="Next scene"><span class="cue-word">Scroll</span><svg viewBox="0 0 12 8" aria-hidden="true" focusable="false"><path d="M1 1.5l5 5 5-5"/></svg></button>
+  </nav>
+</body>
+</html>
